@@ -38,13 +38,26 @@
         android:layout_column="1"
         android:layout_row="2" />
 
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="370dp"
+        android:layout_height="214dp"
+        android:layout_column="1"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:text="3000/8000 경험치?"
+        android:textSize="50px"
+        android:layout_row="4"/>
+
     <Button
-        android:id="@+id/button_send"
+        android:id="@+id/toMapsbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Goto MapsActivity"
+        android:text="Goto Maps Activity"
         android:layout_column="1"
-        android:layout_row="3"/>
+        android:onClick="gotoMaps"
+        android:layout_row="5"/>
 
 </GridLayout>
