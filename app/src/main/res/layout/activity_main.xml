@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@drawable/topbottom_edge" >
 
     <TextView
         android:id="@+id/textView2"
@@ -14,50 +15,69 @@
         android:layout_column="1"
         android:layout_gravity="top"
         android:layout_weight="1"
-        android:text="\n\t\t\t\t\t\t\t오늘 내가 먹은 치킨은...\n\t\t\t\t\t\t\t\t\t\t\t\t\t내 뱃살은...[명언]\n"
+        android:text="\n\t\t\t\t\t\t\t오늘 내가 먹은 치킨은...\n\t\t\t\t\t\t\t\t\t\t\t\t\t내 뱃살은...[자극 되는 말]\n"
         android:textSize="50px"
+        android:textColor="@color/colorDark"
+        android:background="@drawable/top_edge"
+        android:textStyle="italic"
         android:layout_row="0"/>
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="370dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
         android:layout_row="1"
+        android:layout_column="1"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:text="주변에 이런 공원은 어떠세요?"
+        android:background="@drawable/top_edge"
+        android:text="\n\t\t\t\t주변에 이런 공원은 어떠세요?"
+        android:textColor="@color/colorDark"
         android:textSize="50px"
-        android:layout_column="1" />
+        android:textStyle="bold"/>
 
     <Gallery
         android:id="@+id/gallery1"
-        android:layout_width="match_parent"
+        android:layout_width="277dp"
         android:layout_height="152dp"
-        android:layout_gravity="fill_horizontal"
-        android:spacing="5dp"
+        android:layout_row="2"
         android:layout_column="1"
-        android:layout_row="2" />
-
+        android:layout_gravity="fill_horizontal"
+        android:background="@drawable/top_edge"
+        android:spacing="5dp" />
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="370dp"
-        android:layout_height="214dp"
+        android:layout_width="match_parent"
+        android:layout_height="132dp"
+        android:layout_row="4"
         android:layout_column="1"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:text="3000/8000 경험치?"
-        android:textSize="50px"
-        android:layout_row="4"/>
+        android:background="@drawable/topbottom_edge"
+        android:text="\n\t\t\t3000/8000 경험치? \n\t\t\t일단 자리 만드려고 텍스트로 만들어놓음."
+        android:textColor="@color/colorDark"
+        android:textSize="50px" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_row="5"
+        android:background="@drawable/button_edge_black"
+        android:layout_column="1" />
 
     <Button
         android:id="@+id/toMapsbutton"
-        android:layout_width="wrap_content"
+        android:layout_width="139dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Goto Maps Activity"
+        android:layout_row="6"
         android:layout_column="1"
+        android:layout_gravity="center"
+        android:background="@drawable/button_edge_black"
         android:onClick="gotoMaps"
-        android:layout_row="5"/>
+        android:text="걷기 시작!"
+        android:textColor="@color/colorDark" />
 
 </GridLayout>
