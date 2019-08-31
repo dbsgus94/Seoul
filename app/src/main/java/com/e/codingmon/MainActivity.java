@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import org.xmlpull.v1.XmlPullParser;
@@ -141,6 +142,13 @@ public class MainActivity extends AppCompatActivity {
 
         } catch(Exception e) {
             System.out.println("에러 발생");
+        }
+    }
+
+    public void gotoMaps(View view){
+        if(view.getId() == R.id.toMapsbutton){
+            startActivity(new Intent(MainActivity.this, MapsActivity.class));
+            overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
         }
     }
 }

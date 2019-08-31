@@ -17,11 +17,11 @@ public class HomeActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent welcomeIntent = new Intent(HomeActivity.this, MapsActivity.class);
+                Intent welcomeIntent = new Intent(HomeActivity.this, MainActivity.class);
                 startActivity(welcomeIntent);
                 finish();
 
-                startActivity(new Intent(HomeActivity.this, MapsActivity.class));
+                startActivity(new Intent(HomeActivity.this, MainActivity.class));
                 overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
 
             }

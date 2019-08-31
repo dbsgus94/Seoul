@@ -7,5 +7,7 @@
     <color name="colorHome">#0D4D42</color>
     <color name="colorHome2">#36952F</color>
     <color name="colorWelcome">#0D4D42</color>
-
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorGray">#808080</color>
+    <color name="colorSkin">#EFCBC2</color>
 </resources>
