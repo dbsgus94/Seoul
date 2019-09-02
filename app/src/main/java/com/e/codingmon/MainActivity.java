@@ -13,6 +13,9 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -25,58 +28,47 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<String> posterID = new ArrayList<String>();
     static ArrayList<String> imageindexlist = new ArrayList<>();
 
+    LinearLayout linearLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        StrictMode.enableDefaults();
+        linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+
+        if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build());
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build());
+        }
+
         imageParsing();
-        Gallery gallery = (Gallery) findViewById(R.id.gallery1);
-        MyGalleryAdapter galAdapter = new MyGalleryAdapter(this);
-        gallery.setAdapter(galAdapter);
-    }
 
-    public class MyGalleryAdapter extends BaseAdapter {
+        for(int i = 0; i < 50; i++) {
+            ImageView imageView = new ImageView(this);
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(300, 400));
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageView.setPadding(5, 5, 5, 5);
+            imageView.setImageDrawable(LoadImageFromWebOperations(posterID.get(i)));
+            linearLayout.addView(imageView);
+            final int num = i;
 
-        Context context;
-
-        public MyGalleryAdapter(Context c) {
-            context = c;
-        }
-
-        public int getCount() {
-            return posterID.size();
-        }
-
-        public Object getItem(int arg0) {
-            return null;
-        }
-
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView imageview = new ImageView(context);
-            imageview.setLayoutParams(new Gallery.LayoutParams(300, 400));
-            imageview.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            imageview.setPadding(5, 5, 5, 5);
-            imageview.setImageDrawable(LoadImageFromWebOperations(posterID.get(position)));
-
-            final int pos = position;
-            imageview.setOnTouchListener(new View.OnTouchListener() {
-                public boolean onTouch(View v, MotionEvent event) {
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, ParkInfoActivity.class);
                     Bundle extras = new Bundle();
-                    extras.putString("position", imageindexlist.get(pos));
+                    extras.putString("position", imageindexlist.get(num));
                     intent.putExtras(extras);
                     startActivity(intent);
-                    return false;
                 }
             });
-
-            return imageview;
         }
     }
 
