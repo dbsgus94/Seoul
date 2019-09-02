@@ -45,14 +45,26 @@
         android:paddingRight="15dp"
         android:orientation="horizontal">
         <Button
+            android:id="@+id/start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="시작"/>
+
         <Button
-            android:id="@+id/button"
+            android:id="@+id/end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="끝"/>
+
+        <Button
+            android:id="@+id/reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="초기화"
+            >
+
+        </Button>
+
 
     </LinearLayout>
 </FrameLayout>
