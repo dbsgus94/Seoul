@@ -23,12 +23,11 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory">
         <activity android:name=".WelcomeActivity">
-
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
         <activity android:name=".MainActivity" ></activity>
         <activity android:name=".HomeActivity"></activity>
@@ -49,6 +48,7 @@
             android:label="@string/title_activity_maps"></activity>
 
         <activity android:name=".ParkInfoActivity"></activity>
+        <activity android:name=".FitActivity"></activity>
     </application>
 
 </manifest>
