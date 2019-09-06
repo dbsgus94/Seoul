@@ -1,6 +1,7 @@
 package com.e.codingmon;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
@@ -70,6 +71,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+        //SharedPreferences에 저장한 위도와 경도값 확인
+        SharedPreferences sharedPreferences = getSharedPreferences("latlng", MODE_PRIVATE);
+        String latText = sharedPreferences.getString("lat",  "");
+        String lngText = sharedPreferences.getString("lng", "");
+        //Toast.makeText(MainActivity.this, latText+" "+lngText, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, lngText, Toast.LENGTH_SHORT).show();
+
+        //System.out.println(latText);
+       //System.out.println(lngText);
     }
 
     public static Drawable LoadImageFromWebOperations(String url) {

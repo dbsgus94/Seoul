@@ -3,6 +3,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -12,12 +13,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -36,9 +40,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 //hihihi
 
 import androidx.annotation.NonNull;
@@ -74,6 +83,10 @@ public class MapsActivity extends AppCompatActivity
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
     Location location;
+    Chronometer ch ;
+    TimerTask tt;
+    long counter = 0;
+
 
     Button btn_start,btn_end,btn_reset;
     static Handler time_handler;
@@ -91,6 +104,18 @@ public class MapsActivity extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_maps);
+
+        ch = (Chronometer) findViewById(R.id.chronometer);
+        tt = new TimerTask() {
+            @Override
+            public void run() {
+                counter ++;
+            }
+        };
+
+        Timer time = new Timer();
+        time.schedule(tt, 0,1000);
+
 
 
 
@@ -181,11 +206,10 @@ public class MapsActivity extends AppCompatActivity
         Button btn_start = (Button) findViewById(R.id.start);
         Button btn_end = (Button) findViewById(R.id.end);
         Button btn_reset = (Button) findViewById(R.id.reset);
-
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isbtn_start=true;
+                isbtn_start = true;
                 Toast.makeText(MapsActivity.this, "시작되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -194,6 +218,7 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 isbtn_start = false;
+                ch.stop();
                 Toast.makeText(MapsActivity.this,"끝났어요",Toast.LENGTH_SHORT).show();
             }
         });
@@ -202,8 +227,10 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 mGoogleMap.clear();
+                ch.setBase(SystemClock.elapsedRealtime());
             }
         });
+
 
 
 
@@ -278,6 +305,14 @@ public class MapsActivity extends AppCompatActivity
         //현재 위치에 마커 생성하고 이동
         setCurrentLocation(location, markerTitle, markerSnippet);
         mCurrentLocatiion = location;
+        SharedPreferences sharedPreferences = getSharedPreferences("latlng", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String latText = String.valueOf(location.getLatitude());
+        String lngText = String. valueOf(location.getLongitude());
+        editor.putString("lat", latText);
+        editor.putString("lng", lngText);
+        editor.commit();
+
     }
 
 
@@ -419,26 +454,29 @@ public class MapsActivity extends AppCompatActivity
 
         //if (currentMarker != null) currentMarker.remove();
 
-
         if(isbtn_start) {
-            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(currentLatLng);
-            markerOptions.title(markerTitle);
-            markerOptions.snippet(markerSnippet);
-            markerOptions.draggable(true);
-            markerOptions.title("나 여기 있어요");
-            markerOptions.anchor(0.5f, 0.5f);
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.circle));
-            currentMarker = mGoogleMap.addMarker(markerOptions);
+            ch.start();
+            ch.setBase(SystemClock.elapsedRealtime());
+            if (counter % 3 == 0) {
+                LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(currentLatLng);
+                markerOptions.title(markerTitle);
+                markerOptions.snippet(markerSnippet);
+                markerOptions.draggable(true);
+                markerOptions.title("나 여기 있어요");
+                markerOptions.anchor(0.5f, 0.5f);
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.circle));
+                currentMarker = mGoogleMap.addMarker(markerOptions);
 
-            if ( mMoveMapByAPI ) {
+                if (mMoveMapByAPI) {
 
-                Log.d( TAG, "setCurrentLocation :  mGoogleMap moveCamera "
-                        + location.getLatitude() + " " + location.getLongitude() ) ;
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLatLng, 17);
-                //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
-                mGoogleMap.moveCamera(cameraUpdate);
+                    Log.d(TAG, "setCurrentLocation :  mGoogleMap moveCamera "
+                            + location.getLatitude() + " " + location.getLongitude());
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLatLng, 17);
+                    //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+                    mGoogleMap.moveCamera(cameraUpdate);
+                }
             }
         }
 
