@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -31,6 +32,8 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
+
+    TextView textView;
 
     static ArrayList<String> posterID = new ArrayList<String>();
     static ArrayList<String> imageindexlist = new ArrayList<>();
@@ -47,6 +50,43 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //다이어트 자극 명언 보여주기
+        String diet[] = {"운동은 당신의 몸을 증오하기 때문이 아니라, 사랑하기 때문에 하는 거예요.",
+                "아무것도 바꾸지 않으면 변하는 것은 없다.",
+                "당신이 아무리 천천히 걷고 있다고 해도 쇼파에 엉덩이를 붙이고 있는 사람들보다는 낫다!",
+                "근육을 붙이려면 몸을 바삐 움직여야지.",
+                "사실, 난 할 수 있어.",
+                "당신의 몸에 귀를 기울여라.",
+                "나약함이 동반되지 않은 강인함이란 없다.",
+                "당신이 변화의 주역!",
+                "시도하지 않으면, 절대 알 수 없어요.",
+                "어제보다 더 멋진 나를 만드세요.",
+                "건강한 음식, 더 많은 움직임, 나 스스로를 사랑하는 일.",
+                "나에게 집중하세요.",
+                "길은 24시간 열려있다. 나가서 뛰어라.",
+                "승리는 가장 끈기있는 자에게 돌아간다.",
+                "계속 노력해야 해요. 지름길은 없어요.",
+                "원하는 몸을 만들기 위해 지금의 몸을 부수자.",
+                "포기하지 마세요. 시작은 언제나 힘든 법입니다.",
+                "목표까지 아직 멀었을지 몰라도 어제보다 가까워졌어요.",
+                "포기하고 도망치거나 더 노력하거나. 내 선택은?",
+                "생각이 바뀌면 몸도 변하기 시작한다.",
+                "가장 큰 거짓말, 나 내일부터 다이어트 할거야.",
+                "당신의 몸은 당신의 라이프스타일을 반영한다.",
+                "짧게라도 걷는 것이 아예 안 걷는 것보다 낫다.",
+                "바라지만 말고 실천해라! 언제까지 바라기만 할건가!",
+                "힘들지 않다면 바뀌지 않는다."};
+
+        //다이어트 자극 명언을 random하게 보여주기
+        SharedPreferences sp = getSharedPreferences("diet", MODE_PRIVATE);
+        int index = sp.getInt("index", 0);
+        textView  = findViewById(R.id.textView2);
+        textView.setText(diet[index]);
+        SharedPreferences.Editor editor = sp.edit();
+        if(index++ > 24) index = 0;
+        editor.putInt("index", index);
+        editor.commit();
 
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
 
