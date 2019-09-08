@@ -5,26 +5,16 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.StrictMode;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.model.LatLng;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
-
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //다이어트 자극 명언 보여주기
+        /*다음 링크 참고
+        https://m.blog.naver.com/PostView.nhn?blogId=dagymdieting&logNo=221306225461&proxyReferer=https%3A%2F%2Fwww.google.com%2F
+        https://post.naver.com/viewer/postView.nhn?volumeNo=16844224&memberNo=41829949
+        https://1boon.kakao.com/tlxpass/171117
+        https://www.facebook.com/diettalk/posts/912318102119245/*/
         String diet[] = {"운동은 당신의 몸을 증오하기 때문이 아니라, 사랑하기 때문에 하는 거예요.",
                 "아무것도 바꾸지 않으면 변하는 것은 없다.",
                 "당신이 아무리 천천히 걷고 있다고 해도 쇼파에 엉덩이를 붙이고 있는 사람들보다는 낫다!",
