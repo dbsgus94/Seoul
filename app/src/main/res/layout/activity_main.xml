@@ -12,24 +12,18 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_column="1"
         android:layout_gravity="top"
-        android:layout_weight="1"
         android:text="\n\t\t\t\t\t\t\t오늘 내가 먹은 치킨은...\n\t\t\t\t\t\t\t\t\t\t\t\t\t내 뱃살은...[자극 되는 말]\n"
         android:textSize="50px"
         android:textColor="@color/colorDark"
         android:background="@drawable/top_edge"
-        android:textStyle="italic"
-        android:layout_row="0"/>
+        android:textStyle="italic" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="68dp"
-        android:layout_row="1"
-        android:layout_column="1"
         android:layout_gravity="center"
-        android:layout_weight="1"
         android:background="@drawable/top_edge"
         android:text="\n\t\t\t\t주변에 이런 공원은 어떠세요?"
         android:textColor="@color/colorDark"
@@ -55,10 +49,7 @@
         android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="132dp"
-        android:layout_row="4"
-        android:layout_column="1"
         android:layout_gravity="center"
-        android:layout_weight="1"
         android:background="@drawable/topbottom_edge"
         android:text="\n\t\t\t3000/8000 경험치? \n\t\t\t일단 자리 만드려고 텍스트로 만들어놓음."
         android:textColor="@color/colorDark"
@@ -69,16 +60,12 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_row="5"
-        android:background="@drawable/button_edge_black"
-        android:layout_column="1" />
+        android:background="@drawable/button_edge_black" />
 
     <Button
         android:id="@+id/toMapsbutton"
         android:layout_width="139dp"
         android:layout_height="wrap_content"
-        android:layout_row="6"
-        android:layout_column="1"
         android:layout_gravity="center"
         android:background="@drawable/button_edge_black"
         android:onClick="gotoMaps"

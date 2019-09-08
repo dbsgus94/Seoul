@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
         String curLatText = sharedPreferences.getString("lat",  ""); //현재 위도
         String curLngText = sharedPreferences.getString("lng", ""); // 현재 경도
 
-        Toast.makeText(getApplicationContext(), curLatText, Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(), curLngText, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), curLatText, Toast.LENGTH_SHORT).show(); //test용
+        Toast.makeText(getApplicationContext(), curLngText, Toast.LENGTH_SHORT).show(); //test용
 
         //이거는 위치가 바뀌는것
         //LatLng curLatLng = new LatLng(Double.parseDouble(curLatText), Double.parseDouble(curLngText));
