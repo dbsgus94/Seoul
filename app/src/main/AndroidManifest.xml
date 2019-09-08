@@ -28,11 +28,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".MainActivity" >
-
-        </activity>
+        <activity android:name=".MainActivity" ></activity>
         <activity android:name=".HomeActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -53,9 +50,7 @@
         </activity>
 
         <activity android:name=".ParkInfoActivity"></activity>
-        <activity android:name=".FitActivity">
-
-        </activity>
+        <activity android:name=".FitActivity"></activity>
     </application>
 
 </manifest>
