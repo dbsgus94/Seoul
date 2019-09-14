@@ -1,12 +1,24 @@
 package com.e.codingmon;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.LocationManager;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import android.graphics.drawable.Drawable;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,31 +27,49 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     TextView textView;
 
-    static ArrayList<String> posterID = new ArrayList<String>();
-    static ArrayList<String> imageindexlist = new ArrayList<>();
-    static ArrayList<String> parkList = new ArrayList<>();
-    static ArrayList<String> latitudeList = new ArrayList<>();
-    static ArrayList<String> longtitudeList = new ArrayList<>();
-    static ArrayList<Place> places = new ArrayList<Place>();
+    static ArrayList<String> imageURLList = new ArrayList<String>(); //api에서 받아온 이미지의 url
+    static ArrayList<String> imageindexlist = new ArrayList<>(); //api에서 받아온 이미지의 index
+    static ArrayList<String> parkList = new ArrayList<>(); //api에서 받아온 공원의 이름
+    static ArrayList<String> latitudeList = new ArrayList<>(); //api에서 받아온 공원 위치의 latitude
+    static ArrayList<String> longtitudeList = new ArrayList<>(); //api에서 받아온 공원 위치의 longitude
+    static ArrayList<Place> places = new ArrayList<Place>(); //공원들의 list
 
     LinearLayout linearLayout;
-    Location location;
-    LatLng latLng;
+
+    private GpsTracker gpsTracker;
+    private static final int GPS_ENABLE_REQUEST_CODE = 2001;
+    private static final int PERMISSIONS_REQUEST_CODE = 100;
+    String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //위치 퍼미션
+        if(!checkLocationServicesStatus()) {
+            showDialogForLocationServiceSetting();
+        } else {
+            checkRunTimePermission();
+        }
+
+        gpsTracker = new GpsTracker(MainActivity.this);
+        double latitude = gpsTracker.getLatitude();
+        double longitude = gpsTracker.getLongitude();
 
         //다이어트 자극 명언 보여주기
         /*다음 링크 참고
@@ -98,44 +128,19 @@ public class MainActivity extends AppCompatActivity {
 
         imageParsing();
 
-        location = new Location("initialLocation");
-        latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        //SharedPreferences에 저장한 위도와 경도값 확인
-        //이거 나중에 다시 확인
-        SharedPreferences sharedPreferences = getSharedPreferences("latlng", MODE_PRIVATE);
-        String curLatText = sharedPreferences.getString("lat",  ""); //현재 위도
-        String curLngText = sharedPreferences.getString("lng", ""); // 현재 경도
-
-        Toast.makeText(getApplicationContext(), curLatText, Toast.LENGTH_SHORT).show(); //test용
-        Toast.makeText(getApplicationContext(), curLngText, Toast.LENGTH_SHORT).show(); //test용
-
-        //이거는 위치가 바뀌는것
-        //LatLng curLatLng = new LatLng(Double.parseDouble(curLatText), Double.parseDouble(curLngText));
-
-        LatLng curLatLng = latLng;
+        LatLng curLatLng = new LatLng(latitude, longitude);
 
         for(int i = 0; i < 131; i++) {
-            places.add(new Place(parkList.get(i), new LatLng(Double.parseDouble(latitudeList.get(i)), Double.parseDouble(longtitudeList.get(i))), posterID.get(i)));
+            places.add(new Place(parkList.get(i), new LatLng(Double.parseDouble(latitudeList.get(i)), Double.parseDouble(longtitudeList.get(i))), imageURLList.get(i), imageindexlist.get(i)));
         }
 
-        /*for(Place p:places) {
-            Log.i("Places before sorting", "Place: " + p.name);
+        Collections.sort(places, new SortPlaces(curLatLng)); //공원들을 현재 위치를 기반으로 거리별 sorting
 
-        }*/
-
-        Collections.sort(places, new SortPlaces(curLatLng));
-
-        /*for(Place p:places) {
-            Log.i("Places after sorting", "Place: " + p.name);
-        }*/
-
-        for(int i = 0; i < 50; i++) {
+        for(int i = 0; i < 10; i++) {
             ImageView imageView = new ImageView(this);
             imageView.setLayoutParams(new LinearLayout.LayoutParams(300, 400));
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             imageView.setPadding(5, 5, 5, 5);
-            //imageView.setImageDrawable(LoadImageFromWebOperations(posterID.get(i)));
             imageView.setImageDrawable(LoadImageFromWebOperations(places.get(i).imageurl)); //sorting된 후
             linearLayout.addView(imageView);
             final int num = i;
@@ -145,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, ParkInfoActivity.class);
                     Bundle extras = new Bundle();
-                    extras.putString("position", imageindexlist.get(num));
+                    extras.putString("position", places.get(num).index);
                     intent.putExtras(extras);
                     startActivity(intent);
                 }
@@ -154,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //참고한 사이트: https://stackoverflow.com/questions/6407324/how-to-display-image-from-url-on-android
     public static Drawable LoadImageFromWebOperations(String url) {
         try {
             InputStream is = (InputStream) new URL(url).getContent();
@@ -164,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //참고한 사이트: https://stackoverflow.com/questions/29711728/how-to-sort-geo-points-according-to-the-distance-from-current-location-in-androi
     public void imageParsing() {
 
         boolean in_p_img = false, in_p_idx = false, inrow = false, in_p_park = false, in_longitude = false, in_latitude = false;
@@ -226,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case XmlPullParser.END_TAG:
                         if(parser.getName().equals("row")) {
-                            posterID.add(p_img);
+                            imageURLList.add(p_img);
                             imageindexlist.add(p_idx);
                             parkList.add(p_park);
                             longtitudeList.add(longitude);
@@ -250,15 +257,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //참고한 사이트: https://stackoverflow.com/questions/29711728/how-to-sort-geo-points-according-to-the-distance-from-current-location-in-androi
     public class Place {
         public String name;
         public LatLng latlng;
         public String imageurl;
+        public String index;
 
-        public Place(String name, LatLng latlng, String imageurl) {
+        public Place(String name, LatLng latlng, String imageurl, String index) {
             this.name = name;
             this.latlng = latlng;
             this.imageurl = imageurl;
+            this.index = index;
         }
     }
 
@@ -288,6 +298,98 @@ public class MainActivity extends AppCompatActivity {
             double angle = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(fromLat) * Math.cos(toLat) * Math.pow(Math.sin(deltaLng/2), 2)));
             return radius * angle;
         }
+    }
+
+    //참고한 사이트: https://webnautes.tistory.com/1315
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == PERMISSIONS_REQUEST_CODE && grantResults.length == REQUIRED_PERMISSIONS.length) { //요청 코드가 PERMISSONS_REQUEST_CODE이고, 요청한 퍼시면 개수만큼 수신되었다면
+            boolean check_result = true;
+            for(int result : grantResults) {
+                if(result != PackageManager.PERMISSION_GRANTED) {
+                    check_result = false;
+                    break;
+                }
+            }
+
+            if(check_result) {
+            } else {
+                if(ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[0]) || ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[1])) {
+                    Toast.makeText(MainActivity.this, "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요", Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Toast.makeText(MainActivity.this, "퍼미션이 거부되었습니다. 설정에서 퍼미션을 허용해야 합니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    void checkRunTimePermission() {
+        int hasFineLocationPermission = ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED &&
+                hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, REQUIRED_PERMISSIONS[0])) {
+                Toast.makeText(MainActivity.this, "이 앱을 실행하려면 위치 접근 권한이 필요합니다.", Toast.LENGTH_LONG).show();
+                ActivityCompat.requestPermissions(MainActivity.this, REQUIRED_PERMISSIONS,
+                        PERMISSIONS_REQUEST_CODE);
+            } else {
+                ActivityCompat.requestPermissions(MainActivity.this, REQUIRED_PERMISSIONS,
+                        PERMISSIONS_REQUEST_CODE);
+            }
+        }
+    }
+
+    //여기부터는 GPS 활성화를 위한 메소드들
+    private void showDialogForLocationServiceSetting() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("위치 서비스 비활성화");
+        builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n"
+                + "위치 설정을 수정하실래요?");
+        builder.setCancelable(true);
+        builder.setPositiveButton("설정", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                Intent callGPSSettingIntent
+                        = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE);
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        builder.create().show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case GPS_ENABLE_REQUEST_CODE:
+                if (checkLocationServicesStatus()) {
+                    if (checkLocationServicesStatus()) {
+
+                        Log.d("@@@", "onActivityResult : GPS 활성화 되있음");
+                        checkRunTimePermission();
+                        return;
+                    }
+                }
+                break;
+        }
+    }
+
+    public boolean checkLocationServicesStatus() {
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 }
 
