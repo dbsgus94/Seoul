@@ -20,7 +20,8 @@
         android:textSize="50px"
         android:textColor="@color/colorDark"
         android:background="@drawable/top_edge"
-        android:textStyle="italic" />
+        android:textStyle="italic"
+        android:fontFamily="@font/nanumgodik"/>
 
     <TextView
         android:id="@+id/textView3"
@@ -31,7 +32,7 @@
         android:text="\n\t\t\t\t주변에 이런 공원은 어떠세요?"
         android:textColor="@color/colorDark"
         android:textSize="60px"
-        android:textStyle="bold"/>
+        android:fontFamily="@font/nanumgodikbold"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -70,7 +71,7 @@
         android:text="\t\t\t\t나는 오늘 이만큼 걸었다!"
         android:textColor="@color/colorDark"
         android:textSize="60px"
-        android:textStyle="bold"
+        android:fontFamily="@font/nanumgodikbold"
         />
 
     <ProgressBar
@@ -90,7 +91,7 @@
         android:text="5382보 / 8000보\t"
         android:textColor="@color/colorDark"
         android:textSize="30dp"
-        android:textStyle="bold"/>
+        android:fontFamily="@font/nanumgodikbold"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -106,6 +107,7 @@
         android:onClick="gotoMaps"
         android:text=" 걷기 시작! "
         android:textColor="@color/colorDark"
-        android:textSize="30dp" />
+        android:textSize="30dp"
+        android:fontFamily="@font/nanumgodik"/>
 
 </LinearLayout>
