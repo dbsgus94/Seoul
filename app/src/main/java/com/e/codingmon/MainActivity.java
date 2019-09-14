@@ -109,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
         textView  = findViewById(R.id.textView2);
         textView.setText(diet[index]);
         SharedPreferences.Editor editor = sp.edit();
-        if(index++ > 24) index = 0;
+        if(index > 24) index = 0;
+        else index ++;
         editor.putInt("index", index);
         editor.commit();
 
@@ -135,6 +136,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Collections.sort(places, new SortPlaces(curLatLng)); //공원들을 현재 위치를 기반으로 거리별 sorting
+
+        /*for(int i = 0; i < places.size(); i++) {
+            Log.i("Image Url:", places.get(i).name + places.get(i).imageurl);
+        }*/
 
         for(int i = 0; i < 10; i++) {
             ImageView imageView = new ImageView(this);

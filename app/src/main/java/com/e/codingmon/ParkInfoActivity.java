@@ -1,20 +1,52 @@
 package com.e.codingmon;
 
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.StrictMode;
+import android.text.method.LinkMovementMethod;
+import android.text.method.ScrollingMovementMethod;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.InputStream;
 import java.net.URL;
 
 public class ParkInfoActivity extends AppCompatActivity {
+
+    TextView parkName;
+    ImageView parkImage;
+    TextView parkContent;
+    TextView parkEquip;
+    TextView parkPlants;
+    ImageView Guidance;
+    TextView parkReference;
+    TextView parkAddr;
+    TextView parkTel;
+    TextView parkURL;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parkinfo);
+
+        parkName = (TextView) findViewById(R.id.parkName);
+        parkImage = (ImageView) findViewById(R.id.parkImage);
+        parkContent = (TextView) findViewById (R.id.parkContent);
+        parkEquip = (TextView) findViewById(R.id.parkEquip);
+        parkPlants = (TextView) findViewById(R.id.parkPlants);
+        Guidance = (ImageView) findViewById(R.id.parkGuidance);
+        parkReference = (TextView) findViewById(R.id.parkReference);
+        parkAddr = (TextView) findViewById(R.id.parkAddr);
+        parkTel = (TextView) findViewById(R.id.parkTel);
+        parkURL = (TextView) findViewById(R.id.parkURL);
 
         StrictMode.enableDefaults();
 
@@ -22,8 +54,6 @@ public class ParkInfoActivity extends AppCompatActivity {
     }
 
     public void infoParsing() {
-
-        TextView textView1 = (TextView)findViewById(R.id.textview1); //파싱된 결과확인
 
         Bundle extras = getIntent().getExtras();
         String position = extras.getString("position");
@@ -207,8 +237,21 @@ public class ParkInfoActivity extends AppCompatActivity {
 
                     case XmlPullParser.END_TAG:
                         if(parser.getName().equals("row")) {
-                            textView1.setText(p_idx+p_park+p_list_content+area+open_dt+main_equip+main_plants+guidance+visit_road+use_refer+p_img+p_zone+p_addr+p_name+p_admintel+g_longitude+g_latitude+longitude+latitude+template_url);
                             inrow = false;
+                            parkName.setText(p_park);
+                            parkImage.setImageDrawable(LoadImageFromWebOperations(p_img));
+                            parkImage.setLayoutParams(new LinearLayout.LayoutParams(1000, 1000));
+                            parkImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            parkContent.setText(p_list_content);
+                            parkEquip.setText(main_equip);
+                            parkPlants.setText(main_plants);
+                            Guidance.setImageDrawable(LoadImageFromWebOperations(guidance));
+                            Guidance.setLayoutParams(new LinearLayout.LayoutParams(1000, 1000));
+                            Guidance.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            parkReference.setText(use_refer);
+                            parkAddr.setText(p_addr);
+                            parkTel.setText(p_admintel);
+                            parkURL.setText(template_url);
                         }
                         break;
                 }
@@ -216,7 +259,17 @@ public class ParkInfoActivity extends AppCompatActivity {
             }
 
         } catch(Exception e) {
-            textView1.setText("에러발생");
+            Toast.makeText(getApplicationContext(), "에러발생", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public static Drawable LoadImageFromWebOperations(String url) {
+        try {
+            InputStream is = (InputStream) new URL(url).getContent();
+            Drawable d = Drawable.createFromStream(is, null);
+            return d;
+        } catch (Exception e) {
+            return null;
         }
     }
 }
