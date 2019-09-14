@@ -1,4 +1,5 @@
 package com.e.codingmon;
+
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
@@ -26,6 +27,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.fitness.data.DataPoint;
+import com.google.android.gms.fitness.data.Value;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -48,13 +51,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-//hihihi
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+//FitActivity
+
+
 
 
 public class MapsActivity extends AppCompatActivity
@@ -63,16 +69,16 @@ public class MapsActivity extends AppCompatActivity
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-
     private GoogleApiClient mGoogleApiClient = null;
     private GoogleMap mGoogleMap = null;
     private Marker currentMarker = null;
-
+    private MarkerOptions markerOptions;
     private static final String TAG = "googlemap_example";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2002;
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
+    public static boolean isMyLocationSet = false;
     boolean isbtn_start = false;
 
     private AppCompatActivity mActivity;
@@ -85,6 +91,7 @@ public class MapsActivity extends AppCompatActivity
     Location location;
     Chronometer ch ;
     TimerTask tt;
+
     long counter = 0;
 
 
@@ -104,7 +111,8 @@ public class MapsActivity extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_maps);
-
+        Intent intent = getIntent();
+        String data= intent.getStringExtra("value");
         ch = (Chronometer) findViewById(R.id.chronometer);
         tt = new TimerTask() {
             @Override
@@ -115,8 +123,6 @@ public class MapsActivity extends AppCompatActivity
 
         Timer time = new Timer();
         time.schedule(tt, 0,1000);
-
-
 
 
 
@@ -203,13 +209,14 @@ public class MapsActivity extends AppCompatActivity
         Log.d(TAG, "onMapReady :");
 
         mGoogleMap = googleMap;
-        Button btn_start = (Button) findViewById(R.id.start);
-        Button btn_end = (Button) findViewById(R.id.end);
-        Button btn_reset = (Button) findViewById(R.id.reset);
+        btn_start = (Button) findViewById(R.id.start);
+        btn_end = (Button) findViewById(R.id.end);
+        btn_reset = (Button) findViewById(R.id.reset);
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isbtn_start = true;
+                ch.setBase(SystemClock.elapsedRealtime());
                 Toast.makeText(MapsActivity.this, "시작되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -237,8 +244,7 @@ public class MapsActivity extends AppCompatActivity
 
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
         //지도의 초기위치를 서울로 이동
-        setDefaultLocation();
-
+        getMyLocation();
         //mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
@@ -324,8 +330,9 @@ public class MapsActivity extends AppCompatActivity
             Log.d(TAG, "onStart: mGoogleApiClient connect");
             mGoogleApiClient.connect();
         }
-
         super.onStart();
+        if (mGoogleMap != null)
+            mGoogleMap.setMyLocationEnabled(true);
     }
 
     @Override
@@ -369,14 +376,14 @@ public class MapsActivity extends AppCompatActivity
                     Log.d(TAG, "onConnected : 퍼미션 가지고 있음");
                     Log.d(TAG, "onConnected : call startLocationUpdates");
                     startLocationUpdates();
-                    mGoogleMap.setMyLocationEnabled(false);
+                    mGoogleMap.setMyLocationEnabled(true);
                 }
 
             }else{
 
                 Log.d(TAG, "onConnected : call startLocationUpdates");
                 startLocationUpdates();
-                mGoogleMap.setMyLocationEnabled(false);
+                mGoogleMap.setMyLocationEnabled(true);
             }
         }
     }
@@ -386,7 +393,7 @@ public class MapsActivity extends AppCompatActivity
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
         Log.d(TAG, "onConnectionFailed");
-        setDefaultLocation();
+        // setDefaultLocation();
     }
 
 
@@ -439,6 +446,7 @@ public class MapsActivity extends AppCompatActivity
     }
 
 
+
     public boolean checkLocationServicesStatus() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -456,10 +464,9 @@ public class MapsActivity extends AppCompatActivity
 
         if(isbtn_start) {
             ch.start();
-            ch.setBase(SystemClock.elapsedRealtime());
             if (counter % 3 == 0) {
                 LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions = new MarkerOptions();
                 markerOptions.position(currentLatLng);
                 markerOptions.title(markerTitle);
                 markerOptions.snippet(markerSnippet);
@@ -468,7 +475,6 @@ public class MapsActivity extends AppCompatActivity
                 markerOptions.anchor(0.5f, 0.5f);
                 markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.circle));
                 currentMarker = mGoogleMap.addMarker(markerOptions);
-
                 if (mMoveMapByAPI) {
 
                     Log.d(TAG, "setCurrentLocation :  mGoogleMap moveCamera "
@@ -483,11 +489,36 @@ public class MapsActivity extends AppCompatActivity
 
     }
 
+    public void getMyLocation()
+    {
+        isMyLocationSet = false;
+        mGoogleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+
+            @Override
+            public void onMyLocationChange(Location location) {
+                if(isMyLocationSet)
+                    return;
+                isMyLocationSet = true;
+                // TODO Auto-generated method stub
+                Log.v("current location lat:", ""+location.getLatitude());
+                Log.v("current location lng:", ""+location.getLongitude());
+                //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 17);
+
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+                CameraUpdate center=
+                        CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()),17);
+                CameraUpdate zoom=CameraUpdateFactory.zoomTo(17);
+
+                mGoogleMap.moveCamera(center);
+                mGoogleMap.animateCamera(zoom);
+            }
+        });
+    }
+
 
     public void setDefaultLocation() {
 
         mMoveMapByUser = false;
-
 
         //디폴트 위치, Seoul
         LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
@@ -504,8 +535,7 @@ public class MapsActivity extends AppCompatActivity
         markerOptions.draggable(true);
 
         currentMarker = mGoogleMap.addMarker(markerOptions);
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 17);
         mGoogleMap.moveCamera(cameraUpdate);
 
     }

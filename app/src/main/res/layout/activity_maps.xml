@@ -41,9 +41,11 @@
             android:textColor="@color/colorDark"
             android:text="거리:"/>
             <TextView
+                android:text="120m"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/distanceView"
+                android:textColor="@color/colorDark"
                 android:textSize="25sp">
             </TextView>
         </LinearLayout>
@@ -58,13 +60,14 @@
             android:layout_height="match_parent"
             android:textSize="25sp"
             android:textColor="@color/colorDark"
-            android:text="걸음 수"/>
+            android:text="걸음 수:"/>
         <TextView
             android:id="@+id/stepcount"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="25sp"
             android:textColor="@color/colorDark"
+            android:text="152"
             />
 
     </LinearLayout>
