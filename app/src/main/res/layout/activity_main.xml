@@ -30,7 +30,7 @@
         android:background="@drawable/top_edge"
         android:text="\n\t\t\t\t주변에 이런 공원은 어떠세요?"
         android:textColor="@color/colorDark"
-        android:textSize="50px"
+        android:textSize="60px"
         android:textStyle="bold"/>
 
     <HorizontalScrollView
@@ -48,31 +48,64 @@
 
     </HorizontalScrollView>
 
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="\t"
+        android:textSize="30dp"
+        android:background="@drawable/top_edge" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="\t"
+        android:textSize="15dp"
+        android:background="@drawable/top_edge"/>
+
     <TextView
         android:id="@+id/textView4"
         android:layout_width="match_parent"
-        android:layout_height="132dp"
-        android:layout_gravity="center"
-        android:background="@drawable/topbottom_edge"
-        android:text="\n\t\t\t3000/8000 경험치? \n\t\t\t일단 자리 만드려고 텍스트로 만들어놓음."
+        android:layout_height="48dp"
+        android:text="\t\t\t\t나는 오늘 이만큼 걸었다!"
         android:textColor="@color/colorDark"
-        android:textSize="50px" />
+        android:textSize="60px"
+        android:textStyle="bold"
+        />
 
     <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="71dp"
+        android:max="8000"
+        android:progress="5832"
+        android:progressDrawable="@drawable/progressbar_progressbar1" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="91dp"
+        android:background="@drawable/bottom_edge"
+        android:gravity="center"
+        android:text="5382보 / 8000보\t"
+        android:textColor="@color/colorDark"
+        android:textSize="30dp"
+        android:textStyle="bold"/>
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_edge_black" />
+        android:text="\t"
+        android:textSize="30dp"/>
 
     <Button
         android:id="@+id/toMapsbutton"
-        android:layout_width="139dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/button_edge_black"
         android:onClick="gotoMaps"
-        android:text="걷기 시작!"
-        android:textColor="@color/colorDark" />
+        android:text=" 걷기 시작! "
+        android:textColor="@color/colorDark"
+        android:textSize="30dp" />
 
 </LinearLayout>
