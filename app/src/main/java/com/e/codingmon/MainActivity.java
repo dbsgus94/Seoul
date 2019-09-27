@@ -1,10 +1,15 @@
 package com.e.codingmon;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
@@ -22,6 +27,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
@@ -37,9 +43,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     TextView textView;
+    TextView textView5;
 
     static ArrayList<String> imageURLList = new ArrayList<String>(); //api에서 받아온 이미지의 url
     static ArrayList<String> imageindexlist = new ArrayList<>(); //api에서 받아온 이미지의 index
@@ -55,10 +62,44 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
+    //걸음 수 카운터
+    private SensorManager mSensorManager;
+    private Sensor mSensor;
+    private boolean isSensorPresent = false;
+    private int mStepOffset;
+    public static float progressValue;
+    public static ProgressBar simpleProgressBar;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //걸음 수 카운터
+
+      simpleProgressBar=(ProgressBar) findViewById(R.id.progress);
+      simpleProgressBar.setMax(8000);
+      textView5= (TextView)findViewById(R.id.textView5);
+
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager = (SensorManager)
+                this.getSystemService(Context.SENSOR_SERVICE);
+        if(mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+                != null)
+        {
+            mSensor =
+                    mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            isSensorPresent = true;
+        }
+        else
+        {
+            isSensorPresent = false;
+        }
+
+
 
         //위치 퍼미션
         if(!checkLocationServicesStatus()) {
@@ -164,6 +205,41 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(isSensorPresent)
+        {
+            mSensorManager.registerListener(this, mSensor,
+                    SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(isSensorPresent)
+        {
+            mSensorManager.unregisterListener(this);
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (mStepOffset == 0) {
+            mStepOffset = (int) event.values[0];
+        }
+
+        simpleProgressBar.setProgress(mStepOffset);
+        textView5.setText(""+mStepOffset +" / " +8000);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+
     //참고한 사이트: https://stackoverflow.com/questions/6407324/how-to-display-image-from-url-on-android
     public static Drawable LoadImageFromWebOperations(String url) {
         try {
@@ -261,6 +337,8 @@ public class MainActivity extends AppCompatActivity {
             overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
         }
     }
+
+
 
     //참고한 사이트: https://stackoverflow.com/questions/29711728/how-to-sort-geo-points-according-to-the-distance-from-current-location-in-androi
     public class Place {

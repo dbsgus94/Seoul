@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:background="@drawable/topbottom_edge" >
 
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
@@ -78,8 +79,8 @@
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="71dp"
-        android:max="8000"
-        android:progress="5832"
+        android:progress="0"
+        android:id="@+id/progress"
         android:progressDrawable="@drawable/progressbar_progressbar1" />
 
     <TextView
@@ -88,15 +89,15 @@
         android:layout_height="91dp"
         android:background="@drawable/bottom_edge"
         android:gravity="center"
-        android:text="5382보 / 8000보\t"
         android:textColor="@color/colorDark"
         android:textSize="30dp"
         android:fontFamily="@font/nanumgodikbold"/>
     <TextView
+        android:id="@+id/step"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="\t"
-        android:textSize="30dp"/>
+        android:layout_height="30dp"
+        android:textColor="@color/colorDark"
+        android:textSize="15sp"/>
 
     <Button
         android:id="@+id/toMapsbutton"

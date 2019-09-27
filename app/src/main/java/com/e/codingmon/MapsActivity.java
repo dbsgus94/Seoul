@@ -2,10 +2,13 @@ package com.e.codingmon;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEventListener;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -24,6 +27,10 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -64,7 +71,7 @@ import androidx.core.content.ContextCompat;
 
 
 public class MapsActivity extends AppCompatActivity
-        implements OnMapReadyCallback,
+        implements SensorEventListener,OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
@@ -79,8 +86,12 @@ public class MapsActivity extends AppCompatActivity
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
     public static boolean isMyLocationSet = false;
+    private SensorManager sensorManager;
+    private Sensor stepDetectorSensor;
+    TextView tvStepDetector, tvStepDistance, tvStepCal;
+    private static int mStepDetector=0;
     boolean isbtn_start = false;
-
+    boolean isbtn_reset=false;
     private AppCompatActivity mActivity;
     boolean askPermissionOnceAgain = false;
     boolean mRequestingLocationUpdates = false;
@@ -91,10 +102,7 @@ public class MapsActivity extends AppCompatActivity
     Location location;
     Chronometer ch ;
     TimerTask tt;
-
     long counter = 0;
-
-
     Button btn_start,btn_end,btn_reset;
     static Handler time_handler;
 
@@ -107,12 +115,52 @@ public class MapsActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_maps);
-        Intent intent = getIntent();
-        String data= intent.getStringExtra("value");
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        tvStepDetector = (TextView) findViewById(R.id.stepcount);
+        tvStepDistance=(TextView)findViewById(R.id.stepdistance);
+        tvStepCal = (TextView)findViewById(R.id.stepcal);
+        btn_start = (Button) findViewById(R.id.start);
+        btn_end = (Button) findViewById(R.id.end);
+        btn_reset = (Button) findViewById(R.id.reset);
+
+        btn_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isbtn_start = true;
+                ch.setBase(SystemClock.elapsedRealtime());
+                Toast.makeText(MapsActivity.this, "시작되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btn_end.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isbtn_start = false;
+                ch.stop();
+                Toast.makeText(MapsActivity.this,"끝났어요",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btn_reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mStepDetector=0;
+                isbtn_reset=true;
+                mGoogleMap.clear();
+                tvStepDetector.setText(String.valueOf(mStepDetector)+"보");
+                tvStepDistance.setText(String.valueOf(toDis(mStepDetector))+"m");
+                tvStepCal.setText(String.valueOf(toCal(mStepDetector))+"kcal");
+                Toast.makeText(MapsActivity.this,"초기화",Toast.LENGTH_SHORT).show();
+                ch.stop();
+                ch.setBase(SystemClock.elapsedRealtime());
+            }
+        });
+
+
         ch = (Chronometer) findViewById(R.id.chronometer);
         tt = new TimerTask() {
             @Override
@@ -141,11 +189,29 @@ public class MapsActivity extends AppCompatActivity
         mapFragment.getMapAsync(this);
     }
 
+    public float toDis(int var) {
+        float resultDis = 73*var/100;
+        return resultDis;
+    }
+
+    public int toCal(int var) {
+       int resultCal = var/30;
+        return resultCal;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
 
     @Override
     public void onResume() {
 
         super.onResume();
+        sensorManager.registerListener(this, stepDetectorSensor, SensorManager.SENSOR_DELAY_UI);
+
 
         if (mGoogleApiClient.isConnected()) {
 
@@ -163,7 +229,25 @@ public class MapsActivity extends AppCompatActivity
                 checkPermissions();
             }
         }
+//        sensorManager.registerListener(this, stepDetectorSensor, SensorManager.SENSOR_DELAY_UI);
     }
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
+            if (event.values[0] == 1.0f ){
+                if(isbtn_start =true) {
+                    mStepDetector++;
+                    toDis(mStepDetector);
+                    toCal(mStepDetector) ;
+                }
+                tvStepDetector.setText(String.valueOf(mStepDetector)+"보");
+                tvStepDistance.setText(String.valueOf(toDis(mStepDetector))+"m");
+                tvStepCal.setText(String.valueOf(toCal(mStepDetector))+"kcal");
+            }
+        }
+
+    }
+
 
 
     private void startLocationUpdates() {
@@ -207,41 +291,7 @@ public class MapsActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
 
         Log.d(TAG, "onMapReady :");
-
         mGoogleMap = googleMap;
-        btn_start = (Button) findViewById(R.id.start);
-        btn_end = (Button) findViewById(R.id.end);
-        btn_reset = (Button) findViewById(R.id.reset);
-        btn_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isbtn_start = true;
-                ch.setBase(SystemClock.elapsedRealtime());
-                Toast.makeText(MapsActivity.this, "시작되었습니다.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btn_end.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isbtn_start = false;
-                ch.stop();
-                Toast.makeText(MapsActivity.this,"끝났어요",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btn_reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mGoogleMap.clear();
-                ch.setBase(SystemClock.elapsedRealtime());
-            }
-        });
-
-
-
-
-
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
         //지도의 초기위치를 서울로 이동
         getMyLocation();
@@ -288,8 +338,6 @@ public class MapsActivity extends AppCompatActivity
 
             @Override
             public void onCameraMove() {
-
-
             }
         });
     }
@@ -297,7 +345,6 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onLocationChanged(Location location) {
-
         currentPosition
                 = new LatLng( location.getLatitude(), location.getLongitude());
 
@@ -464,7 +511,7 @@ public class MapsActivity extends AppCompatActivity
 
         if(isbtn_start) {
             ch.start();
-            if (counter % 3 == 0) {
+            if (counter % 10 == 0) {
                 LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                 markerOptions = new MarkerOptions();
                 markerOptions.position(currentLatLng);
@@ -705,4 +752,10 @@ public class MapsActivity extends AppCompatActivity
     }
 
 
+
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 }
