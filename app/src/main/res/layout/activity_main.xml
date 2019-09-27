@@ -108,7 +108,7 @@
         android:onClick="gotoMaps"
         android:text=" 걷기 시작! "
         android:textColor="@color/colorDark"
-        android:textSize="30dp"
+        android:textSize="50px"
         android:fontFamily="@font/nanumgodik"/>
 
 </LinearLayout>

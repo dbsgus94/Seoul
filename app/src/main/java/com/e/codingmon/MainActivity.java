@@ -478,6 +478,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
-    
+
 }
 
