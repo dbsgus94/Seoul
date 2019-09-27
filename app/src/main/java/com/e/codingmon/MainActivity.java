@@ -25,6 +25,7 @@ import android.graphics.drawable.Drawable;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -48,12 +49,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     TextView textView;
     TextView textView5;
 
-    static ArrayList<String> imageURLList = new ArrayList<String>(); //api에서 받아온 이미지의 url
-    static ArrayList<String> imageindexlist = new ArrayList<>(); //api에서 받아온 이미지의 index
-    static ArrayList<String> parkList = new ArrayList<>(); //api에서 받아온 공원의 이름
-    static ArrayList<String> latitudeList = new ArrayList<>(); //api에서 받아온 공원 위치의 latitude
-    static ArrayList<String> longtitudeList = new ArrayList<>(); //api에서 받아온 공원 위치의 longitude
-    static ArrayList<Place> places = new ArrayList<Place>(); //공원들의 list
+    static ArrayList<String> imageURLList ; //api에서 받아온 이미지의 url
+    static ArrayList<String> imageindexlist; //api에서 받아온 이미지의 index
+    static ArrayList<String> parkList ; //api에서 받아온 공원의 이름
+    static ArrayList<String> latitudeList; //api에서 받아온 공원 위치의 latitude
+    static ArrayList<String> longtitudeList; //api에서 받아온 공원 위치의 longitude
+    static ArrayList<Place> places; //공원들의 list
 
     LinearLayout linearLayout;
 
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private boolean isSensorPresent = false;
     private int mStepOffset;
     public static float progressValue;
-    public static ProgressBar simpleProgressBar;
+    public ProgressBar simpleProgressBar;
 
     static double latitude;
     static double longitude;
@@ -77,6 +78,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        imageURLList = new ArrayList<String>();
+        imageindexlist = new ArrayList<>();
+        parkList = new ArrayList<>();
+        latitudeList = new ArrayList<>();
+        longtitudeList = new ArrayList<>();
+        places = new ArrayList<Place>();
+
+        ImageButton refreshButton = (ImageButton) findViewById(R.id.mapsRefresh);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
 
         //걸음 수 카운터
       simpleProgressBar=(ProgressBar) findViewById(R.id.progress);
@@ -149,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if(index == 24) index = 0;
         else index ++;
         editor.putInt("index", index);
-        editor.commit();
+        editor.apply();
 
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
 
@@ -203,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     extras.putString("position", places.get(num).index);
                     intent.putExtras(extras);
                     startActivity(intent);
+                    finish();
                 }
             });
         }
@@ -337,6 +355,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void gotoMaps(View view){
         if(view.getId() == R.id.toMapsbutton){
             startActivity(new Intent(MainActivity.this, MapsActivity.class));
+            finish();
             overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
         }
     }

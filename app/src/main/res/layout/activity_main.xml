@@ -99,16 +99,32 @@
         android:textColor="@color/colorDark"
         android:textSize="15sp"/>
 
-    <Button
-        android:id="@+id/toMapsbutton"
-        android:layout_width="150dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/button_edge_black"
-        android:onClick="gotoMaps"
-        android:text=" 걷기 시작! "
-        android:textColor="@color/colorDark"
-        android:textSize="50px"
-        android:fontFamily="@font/nanumgodik"/>
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        >
+        <Button
+            android:id="@+id/toMapsbutton"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:background="@drawable/button_edge_black"
+            android:onClick="gotoMaps"
+            android:text=" 걷기 시작! "
+            android:textColor="@color/colorDark"
+            android:textSize="50px"
+            android:fontFamily="@font/nanumgodik"/>
 
+        <ImageButton
+            android:layout_marginLeft="10dp"
+            android:id="@+id/mapsRefresh"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/button_edge_black"
+            android:src="@drawable/refresh_foreground" />
+    </LinearLayout>
 </LinearLayout>

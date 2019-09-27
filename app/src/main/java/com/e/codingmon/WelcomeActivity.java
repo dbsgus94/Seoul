@@ -21,7 +21,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 startActivity(homeIntent);
                 finish();
 
-                startActivity(new Intent(WelcomeActivity.this, HomeActivity.class));
+                //startActivity(new Intent(WelcomeActivity.this, HomeActivity.class));
                 overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
                 /*
                 startActivity(new Intent(WelcomeActivity.this, HomeActivity.class));

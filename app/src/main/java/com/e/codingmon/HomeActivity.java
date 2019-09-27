@@ -21,7 +21,7 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(welcomeIntent);
                 finish();
 
-                startActivity(new Intent(HomeActivity.this, MainGuideActivity.class));
+                //startActivity(new Intent(HomeActivity.this, MainGuideActivity.class));
                 overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
 
             }

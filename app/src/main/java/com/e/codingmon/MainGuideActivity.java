@@ -21,7 +21,7 @@ public class MainGuideActivity extends AppCompatActivity {
                 startActivity(welcomeIntent);
                 finish();
 
-                startActivity(new Intent(MainGuideActivity.this, MainActivity.class));
+                //startActivity(new Intent(MainGuideActivity.this, MainActivity.class));
                 overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
 
             }
