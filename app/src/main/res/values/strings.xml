@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">CodingMon</string>
     <string name="title_activity_maps">Map</string>
-    <string name="value">%d</string>
 </resources>

@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         textView  = findViewById(R.id.textView2);
         textView.setText(diet[index]);
         SharedPreferences.Editor editor = sp.edit();
-        if(index > 24) index = 0;
+        if(index == 24) index = 0;
         else index ++;
         editor.putInt("index", index);
         editor.commit();
