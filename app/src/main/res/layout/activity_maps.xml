@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -14,7 +13,9 @@
         android:layout_height="match_parent"
         tools:context=".MapsActivity">
     </fragment>
-    <LinearLayout
+
+ <LinearLayout
+     android:background="@color/colorTrans1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -27,50 +28,57 @@
             android:gravity="center"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textColor="@color/colorDark"
-            android:textSize="30sp"/>
+            android:textColor="@color/colorYellow"
+            android:textSize="25sp"/>
         <LinearLayout
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textSize="25sp"
-            android:textColor="@color/colorDark"
-            android:text="거리:"/>
+
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  거리: "
+                android:textColor="@color/colorYellow"
+                android:textSize="20sp" />
+            <TextView
+                android:text="0 m"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/stepdistance"
-                android:textColor="@color/colorDark"
-                android:textSize="25sp">
+                android:textColor="@color/colorYellow"
+                android:textSize="20sp">
             </TextView>
-
         </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-        <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:textSize="25sp"
-        android:textColor="@color/colorDark"
-        android:text="걸음 수:"/>
-        <TextView
-            android:id="@+id/stepcount"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textSize="25sp"
-            android:textColor="@color/colorAccent"
-            />
-    </LinearLayout>
+
+
+     <LinearLayout
+         android:gravity="center"
+         android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="  걸음 수:"
+                    android:textColor="@color/colorYellow"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/stepcount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="0 보"
+                    android:textColor="@color/colorYellow"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
         <LinearLayout
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -78,42 +86,58 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="25sp"
-                android:textColor="@color/colorDark"
-                android:text="칼로리:"/>
+                android:textSize="20sp"
+                android:textColor="@color/colorYellow"
+                android:text="  칼로리:"/>
             <TextView
                 android:id="@+id/stepcal"
+                android:text="0 kcal"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="25sp"
-                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                android:textColor="@color/colorYellow"
                 />
         </LinearLayout>
 
-    </LinearLayout>
+
+
+ </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_gravity="bottom"
-        android:paddingRight="15dp"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="시작"/>
+        android:orientation="horizontal"
+        android:padding="20dp"
+        >
 
         <Button
+            android:background="@color/colorHome2"
+            android:id="@+id/start"
+            android:layout_width="80dp"
+            android:layout_height="37dp"
+            android:text="시작"
+            android:textColor="@color/colorDark"
+            android:layout_margin="10dp"
+            android:textSize="15sp" />
+
+        <Button
+            android:background="@color/colorHome2"
+            android:layout_margin="10dp"
             android:id="@+id/end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:textColor="@color/colorDark"
+            android:layout_width="80dp"
+            android:layout_height="37dp"
             android:text="끝"/>
 
         <Button
+            android:textColor="@color/colorDark"
+            android:background="@color/colorHome2"
+            android:layout_margin="10dp"
             android:id="@+id/reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="37dp"
             android:text="초기화"
             >
 
@@ -121,5 +145,7 @@
 
 
     </LinearLayout>
+
+
 </FrameLayout>
 

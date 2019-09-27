@@ -6,9 +6,12 @@
     <color name="colorDark">#000000</color>
     <color name="colorHome">#0D4D42</color>
     <color name="colorHome2">#36952F</color>
+    <color name="colorYellow">#f7e600</color>
+    <color name="colorTrans1">#8036952F</color>
     <color name="colorWelcome">#0D4D42</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGray">#808080</color>
+    <color name ="colorTrans">#80808080</color>
     <color name="colorSkin">#EFCBC2</color>
     <color name="colorTwenparent">#80FFFFFF</color>
 </resources>

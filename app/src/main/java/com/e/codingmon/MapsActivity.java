@@ -102,10 +102,7 @@ public class MapsActivity extends AppCompatActivity
     Location location;
     Chronometer ch ;
     TimerTask tt;
-
     long counter = 0;
-
-
     Button btn_start,btn_end,btn_reset;
     static Handler time_handler;
 
@@ -135,7 +132,7 @@ public class MapsActivity extends AppCompatActivity
             public void onClick(View v) {
                 isbtn_start = true;
                 ch.setBase(SystemClock.elapsedRealtime());
-                //Toast.makeText(MapsActivity.this, "시작되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.this, "시작되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -158,6 +155,7 @@ public class MapsActivity extends AppCompatActivity
                 tvStepDistance.setText(String.valueOf(toDis(mStepDetector))+"m");
                 tvStepCal.setText(String.valueOf(toCal(mStepDetector))+"kcal");
                 Toast.makeText(MapsActivity.this,"초기화",Toast.LENGTH_SHORT).show();
+                ch.stop();
                 ch.setBase(SystemClock.elapsedRealtime());
             }
         });
@@ -196,8 +194,8 @@ public class MapsActivity extends AppCompatActivity
         return resultDis;
     }
 
-    public float toCal(float var) {
-       float resultCal = var/30;
+    public int toCal(int var) {
+       int resultCal = var/30;
         return resultCal;
     }
 
@@ -239,7 +237,6 @@ public class MapsActivity extends AppCompatActivity
             if (event.values[0] == 1.0f ){
                 if(isbtn_start =true) {
                     mStepDetector++;
-                    Toast.makeText(MapsActivity.this, "시작되었습니다.", Toast.LENGTH_SHORT).show();
                     toDis(mStepDetector);
                     toCal(mStepDetector) ;
                 }
@@ -295,12 +292,6 @@ public class MapsActivity extends AppCompatActivity
 
         Log.d(TAG, "onMapReady :");
         mGoogleMap = googleMap;
-
-
-
-
-
-
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
         //지도의 초기위치를 서울로 이동
         getMyLocation();
@@ -347,8 +338,6 @@ public class MapsActivity extends AppCompatActivity
 
             @Override
             public void onCameraMove() {
-
-
             }
         });
     }
@@ -356,7 +345,6 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onLocationChanged(Location location) {
-
         currentPosition
                 = new LatLng( location.getLatitude(), location.getLongitude());
 
@@ -523,7 +511,7 @@ public class MapsActivity extends AppCompatActivity
 
         if(isbtn_start) {
             ch.start();
-            if (counter % 3 == 0) {
+            if (counter % 10 == 0) {
                 LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                 markerOptions = new MarkerOptions();
                 markerOptions.position(currentLatLng);
