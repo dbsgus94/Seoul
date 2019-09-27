@@ -171,21 +171,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         SharedPreferences settings = getSharedPreferences("settings", 0);
         boolean firstStart = settings.getBoolean("firstStart", true);
 
+        LatLng curLatLng = new LatLng(latitude, longitude);
+
         if(firstStart) {
             imageParsing();
-
-            LatLng curLatLng = new LatLng(latitude, longitude);
 
             for(int i = 0; i < 131; i++) {
                 places.add(new Place(parkList.get(i), new LatLng(Double.parseDouble(latitudeList.get(i)), Double.parseDouble(longtitudeList.get(i))), imageURLList.get(i), imageindexlist.get(i)));
             }
-
-            Collections.sort(places, new SortPlaces(curLatLng)); //공원들을 현재 위치를 기반으로 거리별 sorting
-
+            
             SharedPreferences.Editor settingsEditor = settings.edit();
             settingsEditor.putBoolean("firstStart", false);
             settingsEditor.commit();
         }
+
+        Collections.sort(places, new SortPlaces(curLatLng)); //공원들을 현재 위치를 기반으로 거리별 sorting
 
         for(int i = 0; i < 10; i++) {
             ImageView imageView = new ImageView(this);
