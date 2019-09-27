@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     extras.putString("position", places.get(num).index);
                     intent.putExtras(extras);
                     startActivity(intent);
-                    finish();
+                    //finish();
                 }
             });
         }
@@ -355,7 +355,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void gotoMaps(View view){
         if(view.getId() == R.id.toMapsbutton){
             startActivity(new Intent(MainActivity.this, MapsActivity.class));
-            finish();
+            //finish();
             overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
         }
     }
