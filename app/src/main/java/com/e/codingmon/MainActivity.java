@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         textView  = findViewById(R.id.textView2);
         textView.setText(diet[index]);
         SharedPreferences.Editor editor = sp.edit();
-        if(index > 24) index = 0;
+        if(index == 24) index = 0;
         else index ++;
         editor.putInt("index", index);
         editor.commit();
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //참고한 사이트: https://stackoverflow.com/questions/29711728/how-to-sort-geo-points-according-to-the-distance-from-current-location-in-androi
+    //참고한 사이트: https://coding-factory.tistory.com/39
     public void imageParsing() {
 
         boolean in_p_img = false, in_p_idx = false, inrow = false, in_p_park = false, in_longitude = false, in_latitude = false;
