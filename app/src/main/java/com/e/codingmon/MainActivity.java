@@ -70,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static float progressValue;
     public static ProgressBar simpleProgressBar;
 
-
+    static double latitude;
+    static double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +99,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             isSensorPresent = false;
         }
 
-
-
         //위치 퍼미션
         if(!checkLocationServicesStatus()) {
             showDialogForLocationServiceSetting();
@@ -108,8 +107,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
         gpsTracker = new GpsTracker(MainActivity.this);
-        double latitude = gpsTracker.getLatitude();
-        double longitude = gpsTracker.getLongitude();
 
         //다이어트 자극 명언 보여주기
         /*다음 링크 참고
@@ -168,21 +165,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
         //참고한 사이트: https://stackoverflow.com/questions/4298893/android-how-do-i-create-a-function-that-will-be-executed-only-once
-        SharedPreferences settings = getSharedPreferences("settings", 0);
-        boolean firstStart = settings.getBoolean("firstStart", true);
+        //SharedPreferences settings = getSharedPreferences("settings", 0);
+        //boolean firstStart = settings.getBoolean("firstStart", true);
 
+        //if(firstStart) {
+        //   SharedPreferences.Editor settingsEditor = settings.edit();
+        //   settingsEditor.putBoolean("firstStart", false);
+        //   settingsEditor.commit();
+        // }
+
+        latitude = gpsTracker.getLatitude();
+        longitude = gpsTracker.getLongitude();
         LatLng curLatLng = new LatLng(latitude, longitude);
 
-        if(firstStart) {
-            imageParsing();
+        imageParsing();
 
-            for(int i = 0; i < 131; i++) {
-                places.add(new Place(parkList.get(i), new LatLng(Double.parseDouble(latitudeList.get(i)), Double.parseDouble(longtitudeList.get(i))), imageURLList.get(i), imageindexlist.get(i)));
-            }
-            
-            SharedPreferences.Editor settingsEditor = settings.edit();
-            settingsEditor.putBoolean("firstStart", false);
-            settingsEditor.commit();
+        for(int i = 0; i < 131; i++) {
+            places.add(new Place(parkList.get(i), new LatLng(Double.parseDouble(latitudeList.get(i)), Double.parseDouble(longtitudeList.get(i))), imageURLList.get(i), imageindexlist.get(i)));
         }
 
         Collections.sort(places, new SortPlaces(curLatLng)); //공원들을 현재 위치를 기반으로 거리별 sorting
@@ -479,5 +478,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }
 
