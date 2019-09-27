@@ -49,7 +49,7 @@
 
                 <corners android:radius="6dp" />
 
-                <solid android:color="#adde83" />
+                <solid android:color="#59a922" />
 
             </shape>
 

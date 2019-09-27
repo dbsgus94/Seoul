@@ -15,22 +15,24 @@
     </fragment>
 
  <LinearLayout
-     android:background="@color/colorTrans1"
+     android:background="@color/colorBlueTrans"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="15dp"
         >
 
-        <Chronometer
-            android:id="@+id/chronometer"
-            android:layout_width="fill_parent"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@color/colorYellow"
-            android:textSize="25sp"/>
-        <LinearLayout
+     <Chronometer
+         android:id="@+id/chronometer"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center_horizontal"
+         android:gravity="center"
+         android:textColor="@color/colorWhite"
+         android:textSize="25sp"
+         android:fontFamily="@font/nanumgodikextrabold"/>
+
+     <LinearLayout
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,19 +42,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="  거리: "
-                android:textColor="@color/colorYellow"
-                android:textSize="20sp" />
+                android:text="  거리 : "
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:fontFamily="@font/nanumgodikextrabold" />
             <TextView
                 android:text="0 m"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/stepdistance"
-                android:textColor="@color/colorYellow"
-                android:textSize="20sp">
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:fontFamily="@font/nanumgodikextrabold" >
             </TextView>
         </LinearLayout>
-
 
 
      <LinearLayout
@@ -64,17 +67,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="  걸음 수:"
-                    android:textColor="@color/colorYellow"
-                    android:textSize="20dp" />
+                    android:text="  걸음 수 : "
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20dp"
+                    android:fontFamily="@font/nanumgodikextrabold"/>
 
                 <TextView
                     android:id="@+id/stepcount"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="0 보"
-                    android:textColor="@color/colorYellow"
-                    android:textSize="20sp" />
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/nanumgodikextrabold"/>
             </LinearLayout>
 
         <LinearLayout
@@ -87,22 +92,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textSize="20sp"
-                android:textColor="@color/colorYellow"
-                android:text="  칼로리:"/>
+                android:textColor="@color/colorWhite"
+                android:text="소모 칼로리 : "
+                android:fontFamily="@font/nanumgodikextrabold"/>
             <TextView
                 android:id="@+id/stepcal"
                 android:text="0 kcal"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textSize="20sp"
-                android:textColor="@color/colorYellow"
+                android:textColor="@color/colorWhite"
+                android:fontFamily="@font/nanumgodikextrabold"
                 />
         </LinearLayout>
 
-
-
  </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -113,32 +117,38 @@
         >
 
         <Button
-            android:background="@color/colorHome2"
+            android:background="@color/colorButtonBlue"
             android:id="@+id/start"
             android:layout_width="80dp"
             android:layout_height="37dp"
             android:text="시작"
-            android:textColor="@color/colorDark"
+            android:textColor="@color/colorWhite"
             android:layout_margin="10dp"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/nanumgodikbold"/>
 
         <Button
-            android:background="@color/colorHome2"
+            android:background="@color/colorButtonBlue"
             android:layout_margin="10dp"
             android:id="@+id/end"
-            android:textColor="@color/colorDark"
+            android:textColor="@color/colorWhite"
             android:layout_width="80dp"
             android:layout_height="37dp"
-            android:text="끝"/>
+            android:text="끝"
+            android:textStyle="bold"
+            android:fontFamily="@font/nanumgodikbold"/>
 
         <Button
-            android:textColor="@color/colorDark"
-            android:background="@color/colorHome2"
+            android:textColor="@color/colorWhite"
+            android:background="@color/colorButtonBlue"
             android:layout_margin="10dp"
             android:id="@+id/reset"
             android:layout_width="80dp"
             android:layout_height="37dp"
             android:text="초기화"
+            android:textStyle="bold"
+            android:fontFamily="@font/nanumgodikbold"
             >
 
         </Button>

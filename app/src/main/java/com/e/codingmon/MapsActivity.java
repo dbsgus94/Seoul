@@ -151,9 +151,9 @@ public class MapsActivity extends AppCompatActivity
                 mStepDetector=0;
                 isbtn_reset=true;
                 mGoogleMap.clear();
-                tvStepDetector.setText(String.valueOf(mStepDetector)+"보");
-                tvStepDistance.setText(String.valueOf(toDis(mStepDetector))+"m");
-                tvStepCal.setText(String.valueOf(toCal(mStepDetector))+"kcal");
+                tvStepDetector.setText(String.valueOf(mStepDetector)+" 보");
+                tvStepDistance.setText(String.valueOf(toDis(mStepDetector))+" m");
+                tvStepCal.setText(String.valueOf(toCal(mStepDetector))+" kcal");
                 Toast.makeText(MapsActivity.this,"초기화",Toast.LENGTH_SHORT).show();
                 ch.stop();
                 ch.setBase(SystemClock.elapsedRealtime());
@@ -246,9 +246,9 @@ public class MapsActivity extends AppCompatActivity
                     toDis(mStepDetector);
                     toCal(mStepDetector) ;
                 }
-                tvStepDetector.setText(String.valueOf(mStepDetector)+"보");
-                tvStepDistance.setText(String.valueOf(toDis(mStepDetector))+"m");
-                tvStepCal.setText(String.valueOf(toCal(mStepDetector))+"kcal");
+                tvStepDetector.setText(String.valueOf(mStepDetector)+" 보");
+                tvStepDistance.setText(String.valueOf(toDis(mStepDetector))+" m");
+                tvStepCal.setText(String.valueOf(toCal(mStepDetector))+" kcal");
             }
         }
 

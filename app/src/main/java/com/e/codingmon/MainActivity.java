@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         for(int i = 0; i < 10; i++) {
             ImageView imageView = new ImageView(this);
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(300, 400));
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(350, 450));
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             imageView.setPadding(5, 5, 5, 5);
             imageView.setImageDrawable(LoadImageFromWebOperations(places.get(i).imageurl)); //sorting된 후
@@ -252,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
         simpleProgressBar.setProgress(mStepOffset);
-        textView5.setText(""+mStepOffset +" / " +8000);
+        textView5.setText(""+mStepOffset +" / " + 8000 + " 걸음");
     }
 
     @Override
@@ -354,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void gotoMaps(View view){
         if(view.getId() == R.id.toMapsbutton){
-            startActivity(new Intent(MainActivity.this, MapsActivity.class));
+            startActivity(new Intent(MainActivity.this, MapsGuideActivity.class));
             //finish();
             overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
         }

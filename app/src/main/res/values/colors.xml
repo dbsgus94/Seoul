@@ -14,4 +14,7 @@
     <color name ="colorTrans">#80808080</color>
     <color name="colorSkin">#EFCBC2</color>
     <color name="colorTwenparent">#80FFFFFF</color>
+    <color name="colorIconTree">#59A922</color>
+    <color name="colorButtonBlue">#0073a8</color>
+    <color name="colorBlueTrans">#990073a8</color>
 </resources>

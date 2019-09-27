@@ -13,12 +13,12 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
+        android:paddingTop="25dp"
         android:paddingBottom="20dp"
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
         android:textAlignment="center"
-        android:textSize="50px"
+        android:textSize="55px"
         android:textColor="@color/colorDark"
         android:background="@drawable/top_edge"
         android:textStyle="italic"
@@ -27,13 +27,13 @@
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="75dp"
         android:layout_gravity="center"
         android:background="@drawable/top_edge"
+        android:fontFamily="@font/nanumgodikbold"
         android:text="\n\t\t\t\t주변에 이런 공원은 어떠세요?"
         android:textColor="@color/colorDark"
-        android:textSize="60px"
-        android:fontFamily="@font/nanumgodikbold"/>
+        android:textSize="60px" />
 
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -50,13 +50,6 @@
 
     </HorizontalScrollView>
 
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="\t"
-        android:textSize="30dp"
-        android:background="@drawable/top_edge" />
 
     <TextView
         android:layout_width="match_parent"
@@ -95,7 +88,7 @@
     <TextView
         android:id="@+id/step"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="20dp"
         android:textColor="@color/colorDark"
         android:textSize="15sp"/>
 
@@ -104,26 +97,27 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:padding="20dp"
-        >
+        android:padding="20dp">
+
         <Button
             android:id="@+id/toMapsbutton"
             android:layout_width="150dp"
             android:layout_height="50dp"
-            android:gravity="center"
             android:background="@drawable/button_edge_black"
+            android:fontFamily="@font/nanumgodik"
+            android:gravity="center"
             android:onClick="gotoMaps"
             android:text=" 걷기 시작! "
+            android:textStyle="bold"
             android:textColor="@color/colorDark"
-            android:textSize="50px"
-            android:fontFamily="@font/nanumgodik"/>
+            android:textSize="55px" />
 
         <ImageButton
-            android:layout_marginLeft="10dp"
             android:id="@+id/mapsRefresh"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/button_edge_black"
             android:src="@drawable/refresh_foreground" />
     </LinearLayout>

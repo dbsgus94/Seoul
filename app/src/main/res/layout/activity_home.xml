@@ -6,20 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="0dp" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/imageView"
-        android:src="@drawable/homeimage"
-        android:background="@color/colorHome"
-        />
-
+        android:src="@drawable/homeicon"
+        android:background="@color/colorHome" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
