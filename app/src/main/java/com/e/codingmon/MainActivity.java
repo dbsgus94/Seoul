@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
         //걸음 수 카운터
-
       simpleProgressBar=(ProgressBar) findViewById(R.id.progress);
       simpleProgressBar.setMax(8000);
       textView5= (TextView)findViewById(R.id.textView5);
@@ -168,19 +167,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     .build());
         }
 
-        imageParsing();
+        //참고한 사이트: https://stackoverflow.com/questions/4298893/android-how-do-i-create-a-function-that-will-be-executed-only-once
+        SharedPreferences settings = getSharedPreferences("settings", 0);
+        boolean firstStart = settings.getBoolean("firstStart", true);
 
-        LatLng curLatLng = new LatLng(latitude, longitude);
+        if(firstStart) {
+            imageParsing();
 
-        for(int i = 0; i < 131; i++) {
-            places.add(new Place(parkList.get(i), new LatLng(Double.parseDouble(latitudeList.get(i)), Double.parseDouble(longtitudeList.get(i))), imageURLList.get(i), imageindexlist.get(i)));
+            LatLng curLatLng = new LatLng(latitude, longitude);
+
+            for(int i = 0; i < 131; i++) {
+                places.add(new Place(parkList.get(i), new LatLng(Double.parseDouble(latitudeList.get(i)), Double.parseDouble(longtitudeList.get(i))), imageURLList.get(i), imageindexlist.get(i)));
+            }
+
+            Collections.sort(places, new SortPlaces(curLatLng)); //공원들을 현재 위치를 기반으로 거리별 sorting
+
+            SharedPreferences.Editor settingsEditor = settings.edit();
+            settingsEditor.putBoolean("firstStart", false);
+            settingsEditor.commit();
         }
-
-        Collections.sort(places, new SortPlaces(curLatLng)); //공원들을 현재 위치를 기반으로 거리별 sorting
-
-        /*for(int i = 0; i < places.size(); i++) {
-            Log.i("Image Url:", places.get(i).name + places.get(i).imageurl);
-        }*/
 
         for(int i = 0; i < 10; i++) {
             ImageView imageView = new ImageView(this);
@@ -202,7 +207,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
             });
         }
-
     }
 
     @Override
@@ -474,5 +478,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
+    
 }
 
