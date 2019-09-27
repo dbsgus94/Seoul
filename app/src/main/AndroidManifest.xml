@@ -10,8 +10,8 @@
     <application
         android:allowBackup="true"
         android:appComponentFactory="whateverString"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@mipmap/launchericonimage"
+        android:label="걷장"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
