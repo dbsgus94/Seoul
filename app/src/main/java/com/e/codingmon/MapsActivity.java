@@ -132,7 +132,7 @@ public class MapsActivity extends AppCompatActivity
             public void onClick(View v) {
                 isbtn_start = true;
                 ch.setBase(SystemClock.elapsedRealtime());
-                Toast.makeText(MapsActivity.this, "시작되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.this, "걷기 시작", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -141,7 +141,7 @@ public class MapsActivity extends AppCompatActivity
             public void onClick(View v) {
                 isbtn_start = false;
                 ch.stop();
-                Toast.makeText(MapsActivity.this,"끝났어요",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.this,"걷기 종료",Toast.LENGTH_SHORT).show();
             }
         });
 
