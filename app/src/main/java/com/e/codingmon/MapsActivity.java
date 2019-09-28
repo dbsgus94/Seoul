@@ -208,9 +208,12 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        SharedPreferences stepPreferences = getSharedPreferences("stepPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor stepeditor = stepPreferences.edit();
+        stepeditor.putInt("mStepDetector", mStepDetector);
+        stepeditor.commit();
         finish();
     }
-
 
     @Override
     public void onResume() {

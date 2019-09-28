@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     static double latitude;
     static double longitude;
 
+    static int mStepDetector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,16 +92,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 startActivity(getIntent());
+                finish();
             }
         });
 
         //걸음 수 카운터
-      simpleProgressBar=(ProgressBar) findViewById(R.id.progress);
-      simpleProgressBar.setMax(8000);
-      textView5= (TextView)findViewById(R.id.textView5);
+        SharedPreferences stepPreferences = getSharedPreferences("stepPreferences", MODE_PRIVATE);
+        mStepDetector = stepPreferences.getInt("mStepDetector", 0);
 
+        simpleProgressBar=(ProgressBar) findViewById(R.id.progress);
+        simpleProgressBar.setMax(1000);
+        textView5= (TextView)findViewById(R.id.textView5);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager = (SensorManager)
@@ -241,8 +245,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             mStepOffset = (int) event.values[0];
         }
 
-        simpleProgressBar.setProgress(mStepOffset);
-        textView5.setText(""+mStepOffset +" / " + 8000 + " 걸음");
+        int totalStep = mStepOffset + mStepDetector;
+        simpleProgressBar.setProgress(mStepOffset + mStepDetector);
+        textView5.setText(""+totalStep +" / " + 8000 + " 걸음");
     }
 
     @Override
