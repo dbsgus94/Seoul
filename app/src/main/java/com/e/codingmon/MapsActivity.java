@@ -107,6 +107,29 @@ public class MapsActivity extends AppCompatActivity
     Button btn_start,btn_end,btn_reset;
     static Handler time_handler;
 
+    private long timerTime = Long.MIN_VALUE;
+
+    //on start timer
+    public void startTimer(){
+        ch.setBase(SystemClock.elapsedRealtime());
+        ch.start();
+        timerTime = Long.MIN_VALUE;
+    }
+
+    //on stop timer
+    public void stopTimer(){
+        ch.stop();
+        timerTime = SystemClock.elapsedRealtime() - ch.getBase();
+    }
+
+    private long getTimerTime(){
+        if(timerTime == Long.MIN_VALUE){
+            return SystemClock.elapsedRealtime() - ch.getBase();
+        }
+
+        return timerTime;
+    }
+
 
     LocationRequest locationRequest = new LocationRequest()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -133,12 +156,13 @@ public class MapsActivity extends AppCompatActivity
 
         counter = 0;
 
+
+
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isbtn_start = true;
-                ch.setBase(SystemClock.elapsedRealtime());
-                ch.start();
+                startTimer();
                 Toast.makeText(MapsActivity.this, "걷기 시작", Toast.LENGTH_SHORT).show();
 
             }
@@ -150,7 +174,7 @@ public class MapsActivity extends AppCompatActivity
                 counter = 0; 
                 isbtn_start = false;
                 isbtn_end=true;
-                ch.stop();
+                stopTimer();
                 Toast.makeText(MapsActivity.this,"걷기 종료",Toast.LENGTH_SHORT).show();
             }
         });
@@ -512,19 +536,22 @@ public class MapsActivity extends AppCompatActivity
     public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
 
         mMoveMapByUser = false;
-        Timer time = new Timer();
+        /*Timer time = new Timer();
         tt = new TimerTask() {
             @Override
             public void run() {
-                counter ++;
+                counter=counter +1;
             }
         };
-        time.schedule(tt, 0,1000);
+        time.schedule(tt, 1000,1000);
+        */
+
         //if (currentMarker != null) currentMarker.remove();
 
         if(isbtn_start) {
-            if (counter % 5 == 0) {
-                Toast.makeText(this, ""+counter, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, ""+getTimerTime(), Toast.LENGTH_SHORT).show();
+
+            if ((int)getTimerTime()/1000 % 5 == 0) {
                 LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                 markerOptions = new MarkerOptions();
                 markerOptions.position(currentLatLng);
