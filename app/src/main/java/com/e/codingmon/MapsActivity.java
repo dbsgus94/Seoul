@@ -517,7 +517,7 @@ public class MapsActivity extends AppCompatActivity
             markerOptions.draggable(true);
             markerOptions.title("나 여기 있어요");
             markerOptions.anchor(0.5f, 0.5f);
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.circle));
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.lastcircle));
             currentMarker = mGoogleMap.addMarker(markerOptions);
             if (mMoveMapByAPI) {
 
