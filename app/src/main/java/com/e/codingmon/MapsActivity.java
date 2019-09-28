@@ -155,6 +155,7 @@ public class MapsActivity extends AppCompatActivity
         btn_end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                counter = 0; 
                 isbtn_start = false;
                 isbtn_end=true;
                 ch.stop();
