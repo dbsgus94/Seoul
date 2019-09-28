@@ -139,16 +139,8 @@ public class MapsActivity extends AppCompatActivity
                 isbtn_start = true;
                 ch.setBase(SystemClock.elapsedRealtime());
                 ch.start();
-                Toast.makeText(MapsActivity.this, "걷기 시작.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.this, "걷기 시작", Toast.LENGTH_SHORT).show();
 
-                tt = new TimerTask() {
-                    @Override
-                    public void run() {
-                        counter ++;
-                    }
-                };
-                Timer time = new Timer();
-                time.schedule(tt, 0,1000);
             }
         });
 
@@ -520,12 +512,19 @@ public class MapsActivity extends AppCompatActivity
     public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
 
         mMoveMapByUser = false;
-
-
+        Timer time = new Timer();
+        tt = new TimerTask() {
+            @Override
+            public void run() {
+                counter ++;
+            }
+        };
+        time.schedule(tt, 0,1000);
         //if (currentMarker != null) currentMarker.remove();
 
         if(isbtn_start) {
-            if (counter % 10 == 0) {
+            if (counter % 5 == 0) {
+                Toast.makeText(this, ""+counter, Toast.LENGTH_SHORT).show();
                 LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                 markerOptions = new MarkerOptions();
                 markerOptions.position(currentLatLng);
