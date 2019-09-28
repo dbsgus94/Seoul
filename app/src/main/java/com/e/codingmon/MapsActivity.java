@@ -89,9 +89,10 @@ public class MapsActivity extends AppCompatActivity
     private SensorManager sensorManager;
     private Sensor stepDetectorSensor;
     TextView tvStepDetector, tvStepDistance, tvStepCal;
-    private static int mStepDetector=0;
+    private  int mStepDetector;
     boolean isbtn_start = false;
     boolean isbtn_reset=false;
+    boolean isbtn_end= false;
     private AppCompatActivity mActivity;
     boolean askPermissionOnceAgain = false;
     boolean mRequestingLocationUpdates = false;
@@ -105,6 +106,7 @@ public class MapsActivity extends AppCompatActivity
     long counter = 0;
     Button btn_start,btn_end,btn_reset;
     static Handler time_handler;
+
 
     LocationRequest locationRequest = new LocationRequest()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -132,7 +134,8 @@ public class MapsActivity extends AppCompatActivity
             public void onClick(View v) {
                 isbtn_start = true;
                 ch.setBase(SystemClock.elapsedRealtime());
-                Toast.makeText(MapsActivity.this, "걷기 시작", Toast.LENGTH_SHORT).show();
+                ch.start();
+                Toast.makeText(MapsActivity.this, "걷기 시작.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -140,6 +143,7 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 isbtn_start = false;
+                isbtn_end=true;
                 ch.stop();
                 Toast.makeText(MapsActivity.this,"걷기 종료",Toast.LENGTH_SHORT).show();
             }
@@ -148,15 +152,19 @@ public class MapsActivity extends AppCompatActivity
         btn_reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mStepDetector=0;
-                isbtn_reset=true;
-                mGoogleMap.clear();
-                tvStepDetector.setText(String.valueOf(mStepDetector)+" 보");
-                tvStepDistance.setText(String.valueOf(toDis(mStepDetector))+" m");
-                tvStepCal.setText(String.valueOf(toCal(mStepDetector))+" kcal");
-                Toast.makeText(MapsActivity.this,"초기화",Toast.LENGTH_SHORT).show();
-                ch.stop();
-                ch.setBase(SystemClock.elapsedRealtime());
+                if (isbtn_end) {
+                    mStepDetector = 0;
+                    isbtn_reset=true;
+                    mGoogleMap.clear();
+                    tvStepDetector.setText(String.valueOf(mStepDetector) + "보");
+                    tvStepDistance.setText(String.valueOf(toDis(mStepDetector)) + "m");
+                    tvStepCal.setText(String.valueOf(toCal(mStepDetector)) + "kcal");
+                    Toast.makeText(MapsActivity.this, "초기화", Toast.LENGTH_SHORT).show();
+                    ch.setBase(SystemClock.elapsedRealtime());
+                    ch.stop();
+                    isbtn_start = false;
+                }
+
             }
         });
 
@@ -205,12 +213,6 @@ public class MapsActivity extends AppCompatActivity
         sensorManager.unregisterListener(this);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
-
 
     @Override
     public void onResume() {
@@ -240,15 +242,13 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
-            if (event.values[0] == 1.0f ){
-                if(isbtn_start =true) {
-                    mStepDetector++;
-                    toDis(mStepDetector);
-                    toCal(mStepDetector) ;
-                }
-                tvStepDetector.setText(String.valueOf(mStepDetector)+" 보");
-                tvStepDistance.setText(String.valueOf(toDis(mStepDetector))+" m");
-                tvStepCal.setText(String.valueOf(toCal(mStepDetector))+" kcal");
+            if (isbtn_start ) {
+                mStepDetector++;
+                toDis(mStepDetector);
+                toCal(mStepDetector);
+                tvStepDetector.setText(String.valueOf(mStepDetector) + " 보");
+                tvStepDistance.setText(String.valueOf(toDis(mStepDetector)) + " m");
+                tvStepCal.setText(String.valueOf(toCal(mStepDetector)) + " kcal");
             }
         }
 
@@ -477,7 +477,7 @@ public class MapsActivity extends AppCompatActivity
                     1);
         } catch (IOException ioException) {
             //네트워크 문제
-            Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
             return "지오코더 서비스 사용불가";
         } catch (IllegalArgumentException illegalArgumentException) {
             Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
@@ -515,7 +515,6 @@ public class MapsActivity extends AppCompatActivity
         //if (currentMarker != null) currentMarker.remove();
 
         if(isbtn_start) {
-            ch.start();
             if (counter % 10 == 0) {
                 LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                 markerOptions = new MarkerOptions();

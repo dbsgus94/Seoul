@@ -247,12 +247,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (mStepOffset == 0) {
+        if (mStepOffset == 0)
             mStepOffset = (int) event.values[0];
-        }
 
+       try {
+           String data = getIntent().getExtras().getString("step");
+           Toast.makeText(this, " "+data, Toast.LENGTH_SHORT).show();
+       } catch(NullPointerException e) {
+           e.printStackTrace();
+       }
         simpleProgressBar.setProgress(mStepOffset);
-        textView5.setText(""+mStepOffset +" / " + 8000 + " 걸음");
+        textView5.setText(""+event.values[0] +" / " + 8000 + " 걸음");
     }
 
     @Override
