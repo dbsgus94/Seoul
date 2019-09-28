@@ -181,16 +181,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     .build());
         }
 
-        //참고한 사이트: https://stackoverflow.com/questions/4298893/android-how-do-i-create-a-function-that-will-be-executed-only-once
-        //SharedPreferences settings = getSharedPreferences("settings", 0);
-        //boolean firstStart = settings.getBoolean("firstStart", true);
-
-        //if(firstStart) {
-        //   SharedPreferences.Editor settingsEditor = settings.edit();
-        //   settingsEditor.putBoolean("firstStart", false);
-        //   settingsEditor.commit();
-        // }
-
         latitude = gpsTracker.getLatitude();
         longitude = gpsTracker.getLongitude();
         LatLng curLatLng = new LatLng(latitude, longitude);
@@ -354,12 +344,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void gotoMaps(View view){
         if(view.getId() == R.id.toMapsbutton){
-            startActivity(new Intent(MainActivity.this, MapsGuideActivity.class));
-            //finish();
+
+            //참고한 사이트: https://stackoverflow.com/questions/4298893/android-how-do-i-create-a-function-that-will-be-executed-only-once
+            SharedPreferences mapsettings = getSharedPreferences("mapsettings", 0);
+            final boolean firstStart = mapsettings.getBoolean("firstStart", true);
+            final SharedPreferences.Editor mapsettingsEditor = mapsettings.edit();
+
+            if(firstStart) {
+                startActivity(new Intent(MainActivity.this, MapsGuideActivity.class));
+                overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
+
+                mapsettingsEditor.putBoolean("firstStart", false);
+                mapsettingsEditor.commit();
+            } else {
+                startActivity(new Intent(MainActivity.this, MapsActivity.class));
+            }
             overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
         }
     }
-
 
 
     //참고한 사이트: https://stackoverflow.com/questions/29711728/how-to-sort-geo-points-according-to-the-distance-from-current-location-in-androi
