@@ -103,7 +103,7 @@ public class MapsActivity extends AppCompatActivity
     Location location;
     Chronometer ch ;
     TimerTask tt;
-    long counter = 0;
+    static int counter;
     Button btn_start,btn_end,btn_reset;
     static Handler time_handler;
 
@@ -129,6 +129,10 @@ public class MapsActivity extends AppCompatActivity
         btn_end = (Button) findViewById(R.id.end);
         btn_reset = (Button) findViewById(R.id.reset);
 
+        ch = (Chronometer) findViewById(R.id.chronometer);
+
+        counter = 0;
+
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,6 +140,15 @@ public class MapsActivity extends AppCompatActivity
                 ch.setBase(SystemClock.elapsedRealtime());
                 ch.start();
                 Toast.makeText(MapsActivity.this, "걷기 시작.", Toast.LENGTH_SHORT).show();
+
+                tt = new TimerTask() {
+                    @Override
+                    public void run() {
+                        counter ++;
+                    }
+                };
+                Timer time = new Timer();
+                time.schedule(tt, 0,1000);
             }
         });
 
@@ -153,6 +166,7 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if (isbtn_end) {
+                    counter = 0;
                     mStepDetector = 0;
                     isbtn_reset=true;
                     mGoogleMap.clear();
@@ -167,21 +181,6 @@ public class MapsActivity extends AppCompatActivity
 
             }
         });
-
-
-        ch = (Chronometer) findViewById(R.id.chronometer);
-        tt = new TimerTask() {
-            @Override
-            public void run() {
-                counter ++;
-            }
-        };
-
-        Timer time = new Timer();
-        time.schedule(tt, 0,1000);
-
-
-
 
         Log.d(TAG, "onCreate");
         mActivity = this;
