@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     static ArrayList<String> longtitudeList; //api에서 받아온 공원 위치의 longitude
     static ArrayList<Place> places; //공원들의 list
 
+
     LinearLayout linearLayout;
 
     private GpsTracker gpsTracker;
@@ -70,9 +71,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private int mStepOffset;
     public static float progressValue;
     public ProgressBar simpleProgressBar;
-
+    public int maxStep;
     static double latitude;
     static double longitude;
+
+    static int mStepDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,21 +88,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         latitudeList = new ArrayList<>();
         longtitudeList = new ArrayList<>();
         places = new ArrayList<Place>();
+        maxStep = 8000;
 
         ImageButton refreshButton = (ImageButton) findViewById(R.id.mapsRefresh);
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 startActivity(getIntent());
+                finish();
             }
         });
 
         //걸음 수 카운터
-      simpleProgressBar=(ProgressBar) findViewById(R.id.progress);
-      simpleProgressBar.setMax(8000);
-      textView5= (TextView)findViewById(R.id.textView5);
+        SharedPreferences stepPreferences = getSharedPreferences("stepPreferences", MODE_PRIVATE);
+        mStepDetector = stepPreferences.getInt("mStepDetector", 0);
 
+        simpleProgressBar=(ProgressBar) findViewById(R.id.progress);
+        simpleProgressBar.setMax(maxStep);
+        textView5= (TextView)findViewById(R.id.textView5);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager = (SensorManager)
@@ -181,16 +187,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     .build());
         }
 
-        //참고한 사이트: https://stackoverflow.com/questions/4298893/android-how-do-i-create-a-function-that-will-be-executed-only-once
-        //SharedPreferences settings = getSharedPreferences("settings", 0);
-        //boolean firstStart = settings.getBoolean("firstStart", true);
-
-        //if(firstStart) {
-        //   SharedPreferences.Editor settingsEditor = settings.edit();
-        //   settingsEditor.putBoolean("firstStart", false);
-        //   settingsEditor.commit();
-        // }
-
         latitude = gpsTracker.getLatitude();
         longitude = gpsTracker.getLongitude();
         LatLng curLatLng = new LatLng(latitude, longitude);
@@ -247,17 +243,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (mStepOffset == 0)
+        if (mStepOffset == 0) {
             mStepOffset = (int) event.values[0];
+        }
 
-       try {
-           String data = getIntent().getExtras().getString("step");
-           Toast.makeText(this, " "+data, Toast.LENGTH_SHORT).show();
-       } catch(NullPointerException e) {
-           e.printStackTrace();
-       }
-        simpleProgressBar.setProgress(mStepOffset);
-        textView5.setText(""+event.values[0] +" / " + 8000 + " 걸음");
+        int totalStep = mStepOffset + mStepDetector;
+        simpleProgressBar.setProgress(mStepOffset + mStepDetector);
+        textView5.setText(""+totalStep +" / " + 8000 + " 걸음");
     }
 
     @Override
@@ -359,12 +351,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void gotoMaps(View view){
         if(view.getId() == R.id.toMapsbutton){
-            startActivity(new Intent(MainActivity.this, MapsGuideActivity.class));
-            //finish();
+
+            //참고한 사이트: https://stackoverflow.com/questions/4298893/android-how-do-i-create-a-function-that-will-be-executed-only-once
+            SharedPreferences mapsettings = getSharedPreferences("mapsettings", 0);
+            final boolean firstStart = mapsettings.getBoolean("firstStart", true);
+            final SharedPreferences.Editor mapsettingsEditor = mapsettings.edit();
+
+            if(firstStart) {
+                startActivity(new Intent(MainActivity.this, MapsGuideActivity.class));
+                overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
+
+                mapsettingsEditor.putBoolean("firstStart", false);
+                mapsettingsEditor.commit();
+            } else {
+                startActivity(new Intent(MainActivity.this, MapsActivity.class));
+            }
             overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
         }
     }
-
 
 
     //참고한 사이트: https://stackoverflow.com/questions/29711728/how-to-sort-geo-points-according-to-the-distance-from-current-location-in-androi
@@ -508,4 +512,3 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         finish();
     }
 }
-

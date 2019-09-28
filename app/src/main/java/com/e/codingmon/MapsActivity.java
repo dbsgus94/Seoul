@@ -203,7 +203,7 @@ public class MapsActivity extends AppCompatActivity
     }
 
     public int toCal(int var) {
-       int resultCal = var/30;
+        int resultCal = var/30;
         return resultCal;
     }
 
@@ -211,6 +211,16 @@ public class MapsActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        SharedPreferences stepPreferences = getSharedPreferences("stepPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor stepeditor = stepPreferences.edit();
+        stepeditor.putInt("mStepDetector", mStepDetector);
+        stepeditor.commit();
+        finish();
     }
 
 
