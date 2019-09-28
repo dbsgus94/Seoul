@@ -16,7 +16,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Message;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.os.Bundle;
@@ -27,22 +26,17 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.hardware.Sensor;
 import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.fitness.data.DataPoint;
-import com.google.android.gms.fitness.data.Value;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -50,13 +44,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
 import java.util.TimerTask;
 
 import androidx.annotation.NonNull;
@@ -64,11 +54,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-//FitActivity
-
-
-
 
 public class MapsActivity extends AppCompatActivity
         implements SensorEventListener,OnMapReadyCallback,
@@ -102,8 +87,6 @@ public class MapsActivity extends AppCompatActivity
     LatLng currentPosition;
     Location location;
     Chronometer ch ;
-    TimerTask tt;
-    static int counter;
     Button btn_start,btn_end,btn_reset;
     static Handler time_handler;
 
@@ -154,24 +137,18 @@ public class MapsActivity extends AppCompatActivity
 
         ch = (Chronometer) findViewById(R.id.chronometer);
 
-        counter = 0;
-
-
-
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isbtn_start = true;
                 startTimer();
                 Toast.makeText(MapsActivity.this, "걷기 시작", Toast.LENGTH_SHORT).show();
-
             }
         });
 
         btn_end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                counter = 0; 
                 isbtn_start = false;
                 isbtn_end=true;
                 stopTimer();
@@ -183,7 +160,6 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if (isbtn_end) {
-                    counter = 0;
                     mStepDetector = 0;
                     isbtn_reset=true;
                     mGoogleMap.clear();
@@ -265,8 +241,8 @@ public class MapsActivity extends AppCompatActivity
                 checkPermissions();
             }
         }
-//        sensorManager.registerListener(this, stepDetectorSensor, SensorManager.SENSOR_DELAY_UI);
     }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
@@ -281,8 +257,6 @@ public class MapsActivity extends AppCompatActivity
         }
 
     }
-
-
 
     private void startLocationUpdates() {
 
@@ -306,10 +280,7 @@ public class MapsActivity extends AppCompatActivity
             mGoogleMap.setMyLocationEnabled(false);
 
         }
-
     }
-
-
 
     private void stopLocationUpdates() {
 
@@ -317,9 +288,7 @@ public class MapsActivity extends AppCompatActivity
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         mRequestingLocationUpdates = false;
     }
-
-
-
+    
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -538,44 +507,27 @@ public class MapsActivity extends AppCompatActivity
     public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
 
         mMoveMapByUser = false;
-        /*Timer time = new Timer();
-        tt = new TimerTask() {
-            @Override
-            public void run() {
-                counter=counter +1;
-            }
-        };
-        time.schedule(tt, 1000,1000);
-        */
-
-        //if (currentMarker != null) currentMarker.remove();
 
         if(isbtn_start) {
-            //Toast.makeText(this, ""+getTimerTime(), Toast.LENGTH_SHORT).show();
+            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            markerOptions = new MarkerOptions();
+            markerOptions.position(currentLatLng);
+            markerOptions.title(markerTitle);
+            markerOptions.snippet(markerSnippet);
+            markerOptions.draggable(true);
+            markerOptions.title("나 여기 있어요");
+            markerOptions.anchor(0.5f, 0.5f);
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.circle));
+            currentMarker = mGoogleMap.addMarker(markerOptions);
+            if (mMoveMapByAPI) {
 
-            if (mStepDetector % 20 ==0) {
-                LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                markerOptions = new MarkerOptions();
-                markerOptions.position(currentLatLng);
-                markerOptions.title(markerTitle);
-                markerOptions.snippet(markerSnippet);
-                markerOptions.draggable(true);
-                markerOptions.title("나 여기 있어요");
-                markerOptions.anchor(0.5f, 0.5f);
-                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.circle));
-                currentMarker = mGoogleMap.addMarker(markerOptions);
-                if (mMoveMapByAPI) {
-
-                    Log.d(TAG, "setCurrentLocation :  mGoogleMap moveCamera "
-                            + location.getLatitude() + " " + location.getLongitude());
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLatLng, 17);
-                    //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
-                    mGoogleMap.moveCamera(cameraUpdate);
-                }
+                Log.d(TAG, "setCurrentLocation :  mGoogleMap moveCamera "
+                        + location.getLatitude() + " " + location.getLongitude());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLatLng, 17);
+                //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+                mGoogleMap.moveCamera(cameraUpdate);
             }
         }
-
-
     }
 
     public void getMyLocation()
