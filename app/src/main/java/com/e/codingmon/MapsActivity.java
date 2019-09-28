@@ -236,6 +236,8 @@ public class MapsActivity extends AppCompatActivity
         SharedPreferences.Editor stepeditor = stepPreferences.edit();
         stepeditor.putInt("mStepDetector", mStepDetector);
         stepeditor.commit();
+        Intent Intent = new Intent(MapsActivity.this, MainActivity.class);
+        startActivity(Intent);
         finish();
     }
 
@@ -549,9 +551,9 @@ public class MapsActivity extends AppCompatActivity
         //if (currentMarker != null) currentMarker.remove();
 
         if(isbtn_start) {
-            Toast.makeText(this, ""+getTimerTime(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, ""+getTimerTime(), Toast.LENGTH_SHORT).show();
 
-            if ((int)getTimerTime()/1000 % 5 == 0) {
+            if (mStepDetector % 20 ==0) {
                 LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                 markerOptions = new MarkerOptions();
                 markerOptions.position(currentLatLng);
